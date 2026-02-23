@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "author": "OSWALDO BQ",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-mega", "id": "mega", "top": 77.4, "left": 6, "attrs": {} },
+    { "type": "wokwi-a4988", "id": "drv1", "top": -33.6, "left": -4.8, "attrs": {} },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "stepper1",
+      "top": -245.99,
+      "left": 10.03,
+      "attrs": { "size": "17" }
+    },
+    { "type": "wokwi-slide-switch", "id": "sw1", "top": -24.4, "left": 147.1, "attrs": {} },
+    {
+      "type": "wokwi-led",
+      "id": "led1",
+      "top": 284.4,
+      "left": 109.4,
+      "attrs": { "color": "red", "flip": "1" }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led2",
+      "top": 284.4,
+      "left": 176.6,
+      "attrs": { "color": "limegreen" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 320.75,
+      "left": 57.6,
+      "attrs": { "value": "100" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 339.95,
+      "left": 57.6,
+      "attrs": { "value": "100" }
+    }
+  ],
+  "connections": [
+    [ "drv1:2A", "stepper1:A-", "green", [ "h0" ] ],
+    [ "drv1:2B", "stepper1:A+", "green", [ "h0" ] ],
+    [ "drv1:1A", "stepper1:B+", "yellow", [ "h0" ] ],
+    [ "drv1:1B", "stepper1:B-", "yellow", [ "h0" ] ],
+    [ "drv1:STEP", "mega:2", "green", [ "h-19.2", "v28.8", "h268.8" ] ],
+    [ "drv1:DIR", "mega:3", "black", [ "h0", "v28.8", "h230.4" ] ],
+    [ "drv1:SLEEP", "drv1:RESET", "blue", [ "h-19.2", "v-9.6" ] ],
+    [ "drv1:ENABLE", "mega:6", "green", [ "h-9.6", "v-19.2", "h192" ] ],
+    [ "sw1:3", "mega:8", "purple", [ "v19.2", "h-124.6" ] ],
+    [ "sw1:2", "mega:GND.1", "purple", [ "v9.6", "h-163.1" ] ],
+    [ "led1:C", "led2:C", "black", [ "v0" ] ],
+    [ "mega:GND.2", "led2:C", "black", [ "v45.3", "h-26.65", "v19.2" ] ],
+    [ "mega:A0", "r1:1", "red", [ "v26.1", "h-176.1", "v38.4" ] ],
+    [ "r1:2", "led1:A", "green", [ "v0" ] ],
+    [ "r2:2", "led2:A", "green", [ "v0", "h75.6" ] ],
+    [ "mega:A1", "r2:1", "green", [ "v16.5", "h-195.2", "v67.2" ] ]
+  ],
+  "dependencies": {}
+}
