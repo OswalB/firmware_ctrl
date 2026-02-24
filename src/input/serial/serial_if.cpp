@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "input/serial/serial_if.h"
 #include "input/command/parser.h"
+#include "core/fsm/machine.h"
 
 #define SERIAL_BAUDRATE 115200
 #define RX_BUFFER_SIZE 128
@@ -40,9 +41,40 @@ void serial_update(void)
         if (rxIndex > 0)
         {
           rxBuffer[rxIndex] = '\0'; // Termina string
+          serial_writeln("\r");
           parser_parse(rxBuffer); // Llama parser
-          serial_writeln(rxBuffer);
-          rxIndex = 0;            // Reset buffer
+
+          while (fsm_hasOutput())
+          {
+            Response r = fsm_getOutput();
+            switch (r.type)
+            {
+            case RESP_OK:
+              serial_writeln("ok");
+              break;
+
+            case RESP_ERROR:
+              serial_write("ERR: ");
+              serial_writeln(r.text);
+              break;
+
+            case RESP_FAULT:
+              serial_write("SYSTEM FAULT - ");
+              serial_writeln(r.text);
+              break;
+
+            case RESP_INFO:
+              serial_writeln(r.text);
+              break;
+            }
+          }
+
+          if (fsm_getState() == MS_IDLE)
+          {
+            serial_write(">> ");
+          }
+
+          rxIndex = 0; // Reset buffer
         }
       }
       else

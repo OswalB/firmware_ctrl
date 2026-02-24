@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+//#include <stdint.h>
 
 /* ===== Inicialización ===== */
 void serial_init(void);
