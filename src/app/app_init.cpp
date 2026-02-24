@@ -3,6 +3,7 @@
 #include "input/serial/serial_if.h"
 //#include "core/fsm/machine.h"
 //#include "modules/motor/motor.h"
+#include "system/console/console.h"
 
 void app_init()
 {
@@ -11,5 +12,7 @@ void app_init()
     serial_init();
     //machine_init();
     serial_writeln("=== Firmaware V1.0 ===");
+    Console_SetMode(CONSOLE_LYD);
+    
     // motorSystem_init();
 }
