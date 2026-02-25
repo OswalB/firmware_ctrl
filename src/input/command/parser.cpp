@@ -16,6 +16,8 @@ static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH]);
 // --------------------------------------------
 void parser_parse(const char *line)
 {
+    fsm_push(RESP_ERROR,"test1");
+    fsm_push(RESP_FAULT,"test6");
     char tokens[MAX_TOKENS][MAX_TOKEN_LENGTH];
     int token_count = tokenize(line, tokens);
 

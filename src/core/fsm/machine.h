@@ -27,6 +27,7 @@ Response fsm_getOutput(void);
 void machine_init(void);
 void machine_update(void);
 void fsm_dispatchEvent(EventType ev);
+void fsm_push(ResponseType type, const char* text);
 
 void fsm_handleCommand(const char* cmd);
 

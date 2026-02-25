@@ -43,37 +43,11 @@ void serial_update(void)
           rxBuffer[rxIndex] = '\0'; // Termina string
           serial_writeln("\r");
           parser_parse(rxBuffer); // Llama parser
-
-          while (fsm_hasOutput())
-          {
-            Response r = fsm_getOutput();
-            switch (r.type)
-            {
-            case RESP_OK:
-              serial_writeln("ok");
-              break;
-
-            case RESP_ERROR:
-              serial_write("ERR: ");
-              serial_writeln(r.text);
-              break;
-
-            case RESP_FAULT:
-              serial_write("SYSTEM FAULT - ");
-              serial_writeln(r.text);
-              break;
-
-            case RESP_INFO:
-              serial_writeln(r.text);
-              break;
-            }
-          }
-
+          
           if (fsm_getState() == MS_IDLE)
           {
             serial_write(">> ");
           }
-
           rxIndex = 0; // Reset buffer
         }
       }
