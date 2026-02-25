@@ -35,3 +35,13 @@ void utils_to_uppercase(char *str)
 /*==================================================
                  CONVERT
 ====================================================*/
+
+const char* enum_toString(int value,
+                          const char* const table[],
+                          int count)
+{
+    if (value >= 0 && value < count)
+        return table[value];
+
+    return "UNKNOWN";
+}

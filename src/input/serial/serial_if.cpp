@@ -101,3 +101,38 @@ void serial_writeln(const char *msg)
 {
   Serial.println(msg);
 }
+
+void serial_drain_fsm(void)
+{
+    while (fsm_hasOutput())
+    {
+        Response r = fsm_getOutput();
+
+        switch (r.type)
+        {
+            case RESP_OK:
+                serial_writeln("ok");
+                break;
+
+            case RESP_ERROR:
+                serial_write("ERR: ");
+                serial_writeln(r.text);
+                break;
+
+            case RESP_FAULT:
+                serial_write("SYSTEM FAULT - ");
+                serial_writeln(r.text);
+                break;
+
+            case RESP_INFO:
+                serial_writeln(r.text);
+                break;
+        }
+    }
+
+    // Prompt solo si la FSM está en IDLE
+    /*if (fsm_getState() == MS_IDLE)
+    {
+        serial_write(">> *");
+    }*/
+}

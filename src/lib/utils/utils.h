@@ -13,3 +13,6 @@ void utils_to_uppercase(char *str);
 ====================================================*/
 
 bool utils_parse_long(const char *token, long *out);
+const char* enum_toString(int value,
+                          const char* const table[],
+                          int count);

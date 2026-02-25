@@ -1,15 +1,16 @@
 #include <stdint.h>
 #include "core/fsm/machine.h"
 #include <string.h>
-//#include "core/event/event_queue.h"
+#include "core/event/event_queue.h"
 //#include "core/types/event_types.h"
 //#include "modules/led/led.h"
 //#include "drivers/led_pwm/led_pwm.h"
 
-static void fsm_push(ResponseType type, const char* text);
-
 static MachineState fsm_state = MS_IDLE;
 static MachineState g_state;
+
+static void fsm_push(ResponseType type, const char* text);
+static void machine_handleEvent(const Event &evt);
 
 #define FSM_QUEUE_SIZE 8
 
@@ -26,7 +27,42 @@ void machine_init(void)
     fsm_state = MS_IDLE;
 }
 
+void fsm_dispatchEvent(EventType ev)
+{
+    switch (fsm_state)
+    {
+        case MS_IDLE:
 
+            if (ev == EVT_START)
+            {
+                fsm_state = MS_RUNNING;
+                fsm_push(RESP_INFO, "processing...");
+            }
+            else if (ev == EV_PARSE_UNKNOWN)
+            {
+                fsm_push(RESP_ERROR, "Unknown command7");
+            }
+            break;
+
+        case MS_RUNNING:
+
+            if (ev == EV_OPERATION_DONE)
+            {
+                fsm_state = MS_IDLE;
+                fsm_push(RESP_OK, "");
+            }
+            break;
+
+        case MS_ERROR:
+
+            if (ev == EVT_RESET)
+            {
+                fsm_state = MS_IDLE;
+                fsm_push(RESP_INFO, "reset done");
+            }
+            break;
+    }
+}
 
 
 
@@ -67,7 +103,7 @@ void fsm_handleCommand(const char* cmd)
     }
     else
     {
-        fsm_push(RESP_ERROR, "unknown command");
+        fsm_push(RESP_ERROR, "unknown command++");
     }
 }
 
@@ -98,4 +134,57 @@ Response fsm_getOutput(void)
 MachineState fsm_getState(void)
 {
     return fsm_state;
+}
+
+void machine_update(void)
+{
+    Event evt;
+
+    if (eventQueue_pop(&evt))
+    {
+        machine_handleEvent(evt);
+    }
+
+    if (fsm_state == MS_RUNNING)
+    {
+        /*if (timeout_detected())
+        {
+            fsm_state = MS_ERROR;
+            fsm_push(RESP_FAULT, "timeout");
+        }
+          if (operation_finished())
+        {
+            fsm_dispatchEvent(EV_OPERATION_DONE);
+        }   
+        */
+    }
+}
+
+static void machine_handleEvent(const Event &evt)
+{
+    // 🔴 1. Eventos globales
+    if (evt.type == EVT_ERROR)
+    {
+        g_state = MS_ERROR;
+        return;
+    }
+
+    // 🔵 2. Delegación por dominio
+    switch (evt.domain)
+    {
+    case DOMAIN_MOTOR:
+        // motor_handleEvent(evt);
+        break;
+
+    case DOMAIN_LED:
+        //led_handleEvent(evt);
+        break;
+
+    case DOMAIN_SENSOR:
+        // sensor_handleEvent(evt);
+        break;
+
+    default:
+        break;
+    }
 }

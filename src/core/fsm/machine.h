@@ -1,4 +1,5 @@
 #pragma once
+#include "core/types/event_types.h"
 
 typedef enum
 {
@@ -25,6 +26,7 @@ Response fsm_getOutput(void);
 
 void machine_init(void);
 void machine_update(void);
+void fsm_dispatchEvent(EventType ev);
 
 void fsm_handleCommand(const char* cmd);
 

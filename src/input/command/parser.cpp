@@ -1,7 +1,10 @@
-# include "parser.h"
+#include "parser.h"
 #include "system/console/console.h"
 #include "lib/utils/utils.h"
 #include "core/command/command_resolver.h"
+#include "core/event/event_builder.h"
+#include "core/event/event_queue.h"
+#include "core/fsm/machine.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -11,7 +14,8 @@ static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH]);
 // --------------------------------------------
 // Parser principal
 // --------------------------------------------
-void parser_parse(const char *line){
+void parser_parse(const char *line)
+{
     char tokens[MAX_TOKENS][MAX_TOKEN_LENGTH];
     int token_count = tokenize(line, tokens);
 
@@ -30,12 +34,29 @@ void parser_parse(const char *line){
 
     if (!command_resolve(tokens, token_count, &match))
     {
-        Console_Print(MSG_LOG,"ERR: Unknown command\n");
+        Console_Print(MSG_LOG, "log> ERR: Unknown command\n");
+        fsm_dispatchEvent(EV_PARSE_UNKNOWN);
         return;
     }
 
-    Console_Print(MSG_DBG,"parserizando ...%s",tokens[0]);
+    Console_Print(MSG_LOG, "log> ok resolve %s", tokens[0]);
 
+    Event event;
+
+    if (!event_build_from_match(&match, &event))
+    {
+        Console_Print(MSG_LOG,"log> ERR: Cannot build event\n");
+        return;
+    }
+
+    eventQueue_push(event);
+
+    Console_Print(MSG_LOG, "log> ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
+                  enum_toString(event.type, EventType_str, EVT_COUNT),
+                  event.domain,
+                  event.id,
+                  event.param,
+                  event.value);
 }
 
 // --------------------------------------------
