@@ -30,7 +30,10 @@ void machine_init(void)
 void fsm_dispatchEvent(EventType ev)
 {
     switch (fsm_state)
-    {
+    {   
+        case MS_BUSY:
+        break;
+        
         case MS_IDLE:
 
             if (ev == EVT_START)
