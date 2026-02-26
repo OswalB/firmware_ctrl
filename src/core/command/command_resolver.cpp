@@ -39,8 +39,6 @@ bool command_resolve(
     // PARAM
     if (strcmp(tokens[3], "SPEED") == 0)
         out_match->param = PARAM_SPEED;
-    else if (strcmp(tokens[3], "POSITION") == 0)
-        out_match->param = PARAM_POSITION;
     else if (strcmp(tokens[3], "STATE") == 0)
         out_match->param = PARAM_STATE;
     else

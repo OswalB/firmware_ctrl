@@ -20,6 +20,7 @@ const char* const EventType_str[EVT_COUNT] =
     // Eventos internos (desde fsm_update)
     "EV_TIMEOUT",
     "EV_HW_FAULT",
-    "EV_OPERATION_DONE"
+    "EV_OPERATION_DONE",
+    "EV_TYPE_REQUEST"
 
 };

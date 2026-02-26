@@ -1,10 +1,12 @@
 #include "parser.h"
 #include "system/console/console.h"
 #include "lib/utils/utils.h"
-#include "core/command/command_resolver.h"
-#include "core/event/event_builder.h"
+// #include "core/command/command_resolver.h"
+// #include "core/event/event_builder.h"
 #include "core/event/event_queue.h"
 #include "core/fsm/machine.h"
+#include "token.h"
+#include "clasifer.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -16,8 +18,6 @@ static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH]);
 // --------------------------------------------
 void parser_parse(const char *line)
 {
-    fsm_push(RESP_ERROR,"test1");
-    fsm_push(RESP_FAULT,"test6");
     char tokens[MAX_TOKENS][MAX_TOKEN_LENGTH];
     int token_count = tokenize(line, tokens);
 
@@ -32,24 +32,33 @@ void parser_parse(const char *line)
         }
     }
 
-    CommandMatch match;
+    Token typed[8];
+
+    classify_tokens(tokens, token_count, typed);
+
+    for (int i = 0; i < token_count; i++)
+    {
+        Console_Print(MSG_LOG, "token %d type=%d", i, typed[i].type);
+    }
+
+    /*CommandMatch match;
 
     if (!command_resolve(tokens, token_count, &match))
     {
-        Console_Print(MSG_LOG, "log> ERR: Unknown command\n");
+        Console_Print(MSG_LOG, "log> no resolve");
         fsm_dispatchEvent(EV_PARSE_UNKNOWN);
         return;
-    }
+    }*/
 
     Console_Print(MSG_LOG, "log> ok resolve %s", tokens[0]);
 
     Event event;
 
-    if (!event_build_from_match(&match, &event))
+    /*if (!event_build_from_match(&match, &event))
     {
-        Console_Print(MSG_LOG,"log> ERR: Cannot build event\n");
+        Console_Print(MSG_LOG, "log> ERR: Cannot build event\n");
         return;
-    }
+    }*/
 
     eventQueue_push(event);
 

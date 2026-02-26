@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "core/types/domain_types.h"
 #include "core/types/param_types.h"
+#include "core/types/command_types.h"
 
 typedef enum
 {
@@ -24,6 +25,7 @@ typedef enum
     EV_TIMEOUT,
     EV_HW_FAULT,
     EV_OPERATION_DONE,
+    EV_TYPE_REQUEST,
 
     EVT_COUNT
 
@@ -35,6 +37,7 @@ extern const char* const EventType_str[EVT_COUNT];
 typedef struct
 {
     EventType type;    // Qué ocurrió
+    CommandType command;   // SET / GET / STATUS / RESET
     DomainType domain; // MOTOR, LED, SENSOR
     uint8_t id;        // Instancia Quién lo generó / a quién aplica
     ParamType param;   // SPEED, POSITION, ...
