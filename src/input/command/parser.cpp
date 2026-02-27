@@ -7,6 +7,7 @@
 #include "core/fsm/machine.h"
 #include "token.h"
 #include "clasifer.h"
+#include "input/command/evaluator.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -41,33 +42,29 @@ void parser_parse(const char *line)
         Console_Print(MSG_LOG, "token %d type=%d", i, typed[i].type);
     }
 
-    /*CommandMatch match;
-
-    if (!command_resolve(tokens, token_count, &match))
+    Event ev;
+    if (!evaluate_command(typed, token_count, &ev))
     {
-        Console_Print(MSG_LOG, "log> no resolve");
+        Console_Print(MSG_LOG, "log> estructura invalida");
+        fsm_push(RESP_ERROR,"estructurra invalida en ingles");
         fsm_dispatchEvent(EV_PARSE_UNKNOWN);
         return;
-    }*/
+    }
 
-    Console_Print(MSG_LOG, "log> ok resolve %s", tokens[0]);
+    Console_Print(MSG_LOG, "log> comando valido");
 
-    Event event;
+    Console_Print(MSG_DBG, "dbg> %d", ev.command);
 
-    /*if (!event_build_from_match(&match, &event))
-    {
-        Console_Print(MSG_LOG, "log> ERR: Cannot build event\n");
-        return;
-    }*/
+    
 
-    eventQueue_push(event);
+    eventQueue_push(ev);
 
     Console_Print(MSG_LOG, "log> ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
-                  enum_toString(event.type, EventType_str, EVT_COUNT),
-                  event.domain,
-                  event.id,
-                  event.param,
-                  event.value);
+                  enum_toString(ev.type, EventType_str, EVT_COUNT),
+                  ev.domain,
+                  ev.id,
+                  ev.param,
+                  ev.value);
 }
 
 // --------------------------------------------

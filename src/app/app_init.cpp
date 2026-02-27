@@ -13,7 +13,9 @@ void app_init()
     serial_writeln("=== Firmaware V1.0 ===");
     machine_init();
     
-    Console_SetMode(CONSOLE_LYD);
+    Console_SetMode(CONSOLE_ALL);
+    
+
     
     // motorSystem_init();
 }

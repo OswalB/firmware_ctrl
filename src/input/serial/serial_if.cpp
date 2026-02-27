@@ -2,6 +2,7 @@
 #include "input/serial/serial_if.h"
 #include "input/command/parser.h"
 #include "core/fsm/machine.h"
+#include  "system/console/console.h"
 
 #define SERIAL_BAUDRATE 115200
 #define RX_BUFFER_SIZE 128
@@ -89,8 +90,7 @@ void serial_drain_fsm(void)
                 break;
 
             case RESP_ERROR:
-                serial_write("ERR: ");
-                serial_writeln(r.text);
+                Console_Print(MSG_ERR, r.text);
                 break;
 
             case RESP_FAULT:

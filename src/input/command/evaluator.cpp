@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include "evaluator.h"
 #include "core/types/event_types.h"
 #include "core/types/token_types.h"
@@ -7,44 +8,60 @@
 #include "input/command/dictionary.h"
 #include "input/command/gramar.h"
 
-bool evaluate_command(char* tokens[],
-                      uint8_t token_count,
-                      Event* out)
+
+
+bool evaluate_command(Token *tokens, int token_count, Event *out)
 {
-    TokenClass types[5];
-
-    // Clasificar tokens
-    for (int i = 0; i < token_count; i++)
-        //types[i] = classify_tokens(tokens[i]);      ATENCION!!!!!
-
-    // Ajustar ID vs VALUE
-    if (token_count >= 3 && types[2] == TK_VALUE)
-        types[2] = TK_VALUE;  // será ID en construcción
-
-    if (!match_grammar(types, token_count))
+    if (token_count < 1)
         return false;
 
-    // Construir evento
-    out->type = EV_TYPE_REQUEST;
-    out->command = cmd_from_string(tokens[0]);
+    memset(out, 0, sizeof(Event));
 
-    if (token_count >= 3)
+    // El primer token siempre debe ser CMD
+    if (tokens[0].type != TOKEN_CMD)
+        return false;
+
+    out->type = tokens[0].cmd;
+
+    switch (token_count)
     {
-        out->domain = domain_from_string(tokens[1]);
-        out->id     = atoi(tokens[2]);
-    }
+        case 1:
+            return true;
 
-    if (token_count == 4)
-    {
-        out->param = PARAM_UNKNOWN;
-        out->value = atoi(tokens[3]);
-    }
+        case 3:
+            if (tokens[1].type != TOKEN_DOMAIN ||
+                tokens[2].type != TOKEN_NUMBER)
+                return false;
 
-    if (token_count == 5)
-    {
-        out->param = param_from_string(tokens[3]);
-        out->value = atoi(tokens[4]);
-    }
+            out->domain = tokens[1].domain;
+            out->id     = tokens[2].number;
+            return true;
 
-    return true;
+        case 4:
+            if (tokens[1].type != TOKEN_DOMAIN ||
+                tokens[2].type != TOKEN_NUMBER ||
+                tokens[3].type != TOKEN_NUMBER)
+                return false;
+
+            out->domain = tokens[1].domain;
+            out->id     = tokens[2].number;
+            out->value  = tokens[3].number;
+            return true;
+
+        case 5:
+            if (tokens[1].type != TOKEN_DOMAIN ||
+                tokens[2].type != TOKEN_NUMBER ||
+                tokens[3].type != TOKEN_PARAM  ||
+                tokens[4].type != TOKEN_NUMBER)
+                return false;
+
+            out->domain = tokens[1].domain;
+            out->id     = tokens[2].number;
+            out->param  = tokens[3].param;
+            out->value  = tokens[4].number;
+            return true;
+
+        default:
+            return false;
+    }
 }
