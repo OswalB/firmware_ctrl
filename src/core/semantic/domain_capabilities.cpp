@@ -56,9 +56,10 @@ get_domain_capabilities(DomainType domain)
 
 bool validate_domain_capabilities_table(void)
 {
-    Console_Print(MSG_FORCE,"validando capabilities");
+    Console_Print(MSG_LOG,"validando capabilities 012");
     size_t table_size =
         sizeof(domain_table) / sizeof(domain_table[0]);
+
 
     if (table_size != (DOMAIN_COUNT - 1))
     {
@@ -70,11 +71,7 @@ bool validate_domain_capabilities_table(void)
     {
         const DomainCapabilities* caps = &domain_table[i];
 
-        if (caps->domain == DOMAIN_NONE)
-        {
-            Console_Print(MSG_LOG,"DOMAIN_NONE in table");
-            return false;
-        }
+        
 
         if (caps->domain >= DOMAIN_COUNT)
         {

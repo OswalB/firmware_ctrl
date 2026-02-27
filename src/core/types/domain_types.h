@@ -3,8 +3,8 @@
 
 typedef enum
 {
-    DOMAIN_NONE  = 0,
-    DOMAIN_MOTOR,
+     
+    DOMAIN_MOTOR= 0,
     DOMAIN_LED,
     DOMAIN_SENSOR,
     DOMAIN_COUNT
