@@ -3,9 +3,10 @@
 
 typedef enum
 {
-    PARAM_UNKNOWN = 0,
+    PARAM_NONE = 0,
     PARAM_STATE,
     PARAM_DUTY,
     PARAM_SPEED,
-    PARAM_THRESHOLD
+    PARAM_THRESHOLD,
+    PARAM_COUNT
 } ParamType;

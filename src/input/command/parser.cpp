@@ -8,7 +8,8 @@
 #include "token.h"
 #include "clasifer.h"
 #include "input/command/evaluator.h"
-#include "input/command/semantic_validator.h"
+//#include "input/command/semantic_validator.h"
+#include "core/semantic/semantic_validator.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -38,10 +39,7 @@ void parser_parse(const char *line)
 
     classify_tokens(tokens, token_count, typed);
 
-    for (int i = 0; i < token_count; i++)
-    {
-        Console_Print(MSG_LOG, "token %d type=%d", i, typed[i].type);
-    }
+    Console_Print(MSG_LOG, "Clasificador ok");
 
     Event ev;
     if (!evaluate_command(typed, token_count, &ev))
@@ -51,7 +49,7 @@ void parser_parse(const char *line)
         return;
     }
     Console_Print(MSG_LOG, "estructura valida");
-    
+
     if (!validate_semantics(&ev))
     {
         fsm_push(RESP_ERROR, "error semantico");
@@ -60,7 +58,7 @@ void parser_parse(const char *line)
     Console_Print(MSG_LOG, "Comando valido");
     eventQueue_push(ev);
 
-    Console_Print(MSG_LOG, "log> ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
+    Console_Print(MSG_LOG, "ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
                   enum_toString(ev.type, EventType_str, EVT_COUNT),
                   ev.domain,
                   ev.id,

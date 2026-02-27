@@ -15,10 +15,10 @@ static const char* messagePrefix(MessageType type)
 {
     switch (type)
     {
-        case MSG_LOG:   return "[LOG] > ";
-        case MSG_DBG:   return "[DBG] > ";
-        case MSG_ERR:   return "[ERR] > ";
-        case MSG_FORCE: return "[FRC] > ";
+        case MSG_LOG:   return "[LOG] ";
+        case MSG_DBG:   return "[DBG] ";
+        case MSG_ERR:   return "[ERR] ";
+        case MSG_FORCE: return "[FRC] ";
         default:        return "";
     }
 }

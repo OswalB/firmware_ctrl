@@ -82,5 +82,5 @@ ParamType param_from_string(const char* str)
             return param_table[i].type;
     }
 
-    return PARAM_UNKNOWN;
+    return PARAM_NONE;
 }

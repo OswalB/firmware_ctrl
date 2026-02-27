@@ -7,5 +7,6 @@ typedef enum
     TK_DOMAIN,
     TK_ID,
     TK_PARAM,
-    TK_VALUE
+    TK_VALUE,
+    TK_COUNT
 } TokenClass;

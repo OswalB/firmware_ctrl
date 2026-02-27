@@ -1,6 +1,6 @@
-#include "semantic_validator.h"
+#include "BORRARsemantic_validator.h"
 
-bool validate_semantics(Event *ev)
+bool BORRARvalidate_semantics(Event *ev)
 {
     switch (ev->domain)
     {

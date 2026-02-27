@@ -6,5 +6,6 @@ typedef enum
     CMD_SET,
     CMD_GET,
     CMD_STATUS,
-    CMD_RESET
+    CMD_RESET,
+    CMD_COUNT
 } CommandType;
