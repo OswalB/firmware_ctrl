@@ -8,6 +8,7 @@
 #include "token.h"
 #include "clasifer.h"
 #include "input/command/evaluator.h"
+#include "input/command/semantic_validator.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -45,18 +46,18 @@ void parser_parse(const char *line)
     Event ev;
     if (!evaluate_command(typed, token_count, &ev))
     {
-        Console_Print(MSG_LOG, "log> estructura invalida");
-        fsm_push(RESP_ERROR,"estructurra invalida en ingles");
-        fsm_dispatchEvent(EV_PARSE_UNKNOWN);
+        fsm_push(RESP_ERROR, "estructurra invalida en ingles");
+        //????fsm_dispatchEvent(EV_PARSE_UNKNOWN);
         return;
     }
-
-    Console_Print(MSG_LOG, "log> comando valido");
-
-    Console_Print(MSG_DBG, "dbg> %d", ev.command);
-
+    Console_Print(MSG_LOG, "estructura valida");
     
-
+    if (!validate_semantics(&ev))
+    {
+        fsm_push(RESP_ERROR, "error semantico");
+        return;
+    }
+    Console_Print(MSG_LOG, "Comando valido");
     eventQueue_push(ev);
 
     Console_Print(MSG_LOG, "log> ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",

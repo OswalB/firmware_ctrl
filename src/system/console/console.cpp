@@ -2,6 +2,7 @@
 #include "platform/transport/transport.h"
 #include <stdarg.h>
 #include <stdio.h>
+#include "input/serial/serial_if.h"
 
 static ConsoleMode g_consoleMode = CONSOLE_NONE;
 
@@ -67,4 +68,5 @@ void Console_Print(MessageType type, const char *format, ...)
     snprintf(finalBuffer, sizeof(finalBuffer), "%s%s", prefix, buffer);
 
     Transport_Write(finalBuffer);
+    set_stateConsole(CONS_BUSY);
 }

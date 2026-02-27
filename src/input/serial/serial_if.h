@@ -2,6 +2,15 @@
 
 //#include <stdint.h>
 
+typedef enum
+{
+    CONS_IDLE,
+    CONS_BUSY,
+    CONS_READY  
+}Console_status;
+
+void set_stateConsole(Console_status st);
+
 /* ===== Inicialización ===== */
 void serial_init(void);
 

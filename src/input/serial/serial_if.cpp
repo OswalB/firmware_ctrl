@@ -11,12 +11,14 @@
 
 static char rxBuffer[RX_BUFFER_SIZE];
 static uint8_t rxIndex = 0;
+Console_status g_consoleStatus = CONS_BUSY;
 
 /* ===== Prototipos privados ===== */
 
 void serial_init(void)
 {
   Serial.begin(SERIAL_BAUDRATE);
+  g_consoleStatus = CONS_BUSY;
 }
 
 void serial_update(void)
@@ -47,7 +49,7 @@ void serial_update(void)
           
           if (fsm_getState() == MS_IDLE)
           {
-            serial_write(">> ");
+            //serial_write(">> ");
           }
           rxIndex = 0; // Reset buffer
         }
@@ -104,9 +106,20 @@ void serial_drain_fsm(void)
         }
     }
 
+    if(g_consoleStatus == CONS_BUSY)
+    {
+      serial_write(">> ");
+      g_consoleStatus = CONS_READY;
+    }
+  
     // Prompt solo si la FSM está en IDLE
     /*if (fsm_getState() == MS_IDLE)
     {
-        serial_write(">> *");
+        
     }*/
+}
+
+void set_stateConsole(Console_status st)
+{
+  g_consoleStatus = st;
 }
