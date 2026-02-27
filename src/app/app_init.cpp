@@ -4,6 +4,7 @@
 #include "core/fsm/machine.h"
 //#include "modules/motor/motor.h"
 #include "system/console/console.h"
+#include "system/system.h"
 
 void app_init()
 {
@@ -11,6 +12,7 @@ void app_init()
     //led_init();
     serial_init();
     serial_writeln("=== Firmaware V1.0 ===");
+    system_init();
     machine_init();
     
     Console_SetMode(CONSOLE_ALL);

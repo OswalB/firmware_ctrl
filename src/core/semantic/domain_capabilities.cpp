@@ -3,6 +3,8 @@
 #include "domain_capabilities.h"
 #include "core/types/event_types.h"
 #include "system/console/console.h"
+#include "core/types/domain_types.h"
+#include "core/types/event_types.h"
 
 static const DomainCapabilities domain_table[] =
 {
@@ -54,6 +56,7 @@ get_domain_capabilities(DomainType domain)
 
 bool validate_domain_capabilities_table(void)
 {
+    Console_Print(MSG_FORCE,"validando capabilities");
     size_t table_size =
         sizeof(domain_table) / sizeof(domain_table[0]);
 
@@ -69,28 +72,28 @@ bool validate_domain_capabilities_table(void)
 
         if (caps->domain == DOMAIN_NONE)
         {
-            console_print("DOMAIN_NONE in table\n");
             Console_Print(MSG_LOG,"DOMAIN_NONE in table");
             return false;
         }
 
         if (caps->domain >= DOMAIN_COUNT)
         {
-            console_print("Domain out of range\n");
+            Console_Print(MSG_LOG,"Domain out of range");
             return false;
         }
 
         if (caps->supported_cmds_mask &
             ~((1u << EVT_COUNT) - 1))
         {
-            console_print("Invalid command mask\n");
+            Console_Print(MSG_LOG,"Invalid command mask");
             return false;
         }
 
         if (caps->supported_params_mask &
             ~((1u << PARAM_COUNT) - 1))
         {
-            console_print("Invalid param mask\n");
+            Console_Print(MSG_LOG,"Invalid command mask");
+            
             return false;
         }
 
@@ -108,7 +111,7 @@ bool validate_domain_capabilities_table(void)
             {
                 if (range.min > range.max)
                 {
-                    console_print("Invalid range\n");
+                    Console_Print(MSG_LOG,"Invalid range");
                     return false;
                 }
             }
@@ -116,13 +119,12 @@ bool validate_domain_capabilities_table(void)
             {
                 if (range_defined)
                 {
-                    console_print("Range defined but param not supported\n");
+                    Console_Print(MSG_LOG,"Range defined but param not supported");
                     return false;
                 }
             }
         }
     }
-
-    console_print("Domain capabilities OK\n");
+    Console_Print(MSG_LOG,"Ok. Capabilities");
     return true;
 }

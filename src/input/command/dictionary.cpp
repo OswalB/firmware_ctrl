@@ -53,7 +53,7 @@ DomainType domain_from_string(const char* str)
             return domain_table[i].type;
     }
 
-    return DOMAIN_UNKNOWN;
+    return DOMAIN_NONE;
 }
 
 // Tabla Param
