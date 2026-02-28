@@ -2,7 +2,8 @@
 
 #include <stdbool.h>
 #include "core/types/event_types.h"
+#include "core/types/err_types.h"
 
 
 
-bool validate_semantics(Event *ev);
+ErrorType validate_semantics(Event *ev);

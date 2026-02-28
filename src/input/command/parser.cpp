@@ -50,9 +50,11 @@ void parser_parse(const char *line)
     }
     Console_Print(MSG_LOG, "estructura valida");
 
-    if (!validate_semantics(&ev))
+    ErrorType response = validate_semantics(&ev);
+    if (response != ERR_NONE)
     {
         fsm_push(RESP_ERROR, "error semantico");
+        Console_Print(MSG_ERR, "err %03d %s", response, ErrorType_toString(response));
         return;
     }
     Console_Print(MSG_LOG, "Comando valido");

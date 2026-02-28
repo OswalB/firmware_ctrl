@@ -12,8 +12,7 @@ static const CmdEntry cmd_table[] =
 {
     {"SET",    CMD_SET},
     {"GET",    CMD_GET},
-    {"STATUS", CMD_STATUS},
-    {"RESET",  CMD_RESET}
+    {"STATUS", CMD_STATUS}
 };
 
 #define CMD_COUNT (sizeof(cmd_table)/sizeof(cmd_table[0]))
@@ -67,9 +66,8 @@ typedef struct
 static const ParamEntry param_table[] =
 {
     {"STATE",     PARAM_STATE},
-    {"DUTY",      PARAM_DUTY},
     {"SPEED",     PARAM_SPEED},
-    {"THRESHOLD", PARAM_THRESHOLD}
+    
 };
 
 #define PARAM_COUNT (sizeof(param_table)/sizeof(param_table[0]))
@@ -82,5 +80,5 @@ ParamType param_from_string(const char* str)
             return param_table[i].type;
     }
 
-    return PARAM_NONE;
+    return PARAM_UNKNOW;
 }

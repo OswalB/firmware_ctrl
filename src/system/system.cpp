@@ -7,7 +7,7 @@ void system_init(void)
 {
     if (!validate_domain_capabilities_table())
     {
-        Console_Print(MSG_FORCE,"CONFIG ERROR v");
+        Console_Print(MSG_FORCE,"CONFIG ERROR ");
         //while (1); // detener sistema
     }else
     {

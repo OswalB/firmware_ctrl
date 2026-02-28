@@ -9,6 +9,7 @@ typedef struct
 {
     int32_t min;
     int32_t max;
+    bool has_range;
 } ParamRange;
 
 typedef struct
@@ -18,6 +19,8 @@ typedef struct
     uint32_t supported_cmds_mask;
     ParamRange param_ranges[PARAM_COUNT];
 } DomainCapabilities;
+
+
 
 const DomainCapabilities *get_domain_capabilities(DomainType domain);
 bool validate_domain_capabilities_table(void);

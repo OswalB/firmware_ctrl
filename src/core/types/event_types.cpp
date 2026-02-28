@@ -2,16 +2,14 @@
 
 const char* const EventType_str[EVT_COUNT] =
 {
+    "EVT_UNKNOW",
     //Eventos externos
-    "EVT_NONE",
     "EVT_SET",
     "EVT_GET",
     "EVT_START",
     "EVT_STOP",
     "EVT_ERROR",
     "EVT_RESET",
-    "EVT_MODE_SET",
-    "EVT_SET_SPEED",
     //Eventos de error
     "EV_PARSE_UNKNOWN",
     "EV_PARSE_INVALID_PARAM",

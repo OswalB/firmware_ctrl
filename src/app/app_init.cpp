@@ -10,12 +10,13 @@ void app_init()
 {
     //eventQueue_init();
     //led_init();
-    serial_init();
-    serial_writeln("=== Firmaware V1.0 ===");
-    system_init();
-    machine_init();
-    
     Console_SetMode(CONSOLE_ALL);
+    serial_init();
+    serial_writeln("=== Firmaware V1.001 ===");
+    
+    machine_init();
+    system_init();
+    
     
 
     

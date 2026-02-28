@@ -3,21 +3,22 @@
 #include "domain_capabilities.h"
 #include "core/types/domain_types.h"
 #include "core/types/param_types.h"
+#include "core/types/err_types.h"
 
-bool validate_semantics(Event *ev)
+ErrorType validate_semantics(Event *ev)
 {
     if (!ev)
-        return false;
+        return ERR_EVENT_UNKNOW;
 
     const DomainCapabilities *caps =
         get_domain_capabilities(ev->domain);
 
     if (!caps)
-        return false;
+        return ERR_DOMANIN;
 
     // 1️⃣ Validar comando permitido
     if (!(caps->supported_cmds_mask & (1u << ev->type)))
-        return false;
+        return ERR_COM;
 
     // 2️⃣ Validar parámetro (si existe)
     if (ev->param < PARAM_COUNT)
@@ -25,23 +26,23 @@ bool validate_semantics(Event *ev)
         if (ev->param != 0) // 0 significa "no param" en tu diseño actual
         {
             if (!(caps->supported_params_mask & (1u << ev->param)))
-                return false;
+                return ERR_PARAM;
         }
     }
 
     //validar rangos
-    if (ev->param != PARAM_NONE)
+    if (ev->param != PARAM_UNKNOW)
     {
         if (!(caps->supported_params_mask & (1u << ev->param)))
-            return false;
+            return ERR_VALUE_PARAM;
 
         int32_t value = ev->value;
 
         ParamRange range = caps->param_ranges[ev->param];
 
         if (value < range.min || value > range.max)
-            return false;
+            return ERR_RANGE_PARAM;
     }
 
-    return true;
+    return ERR_NONE;
 }

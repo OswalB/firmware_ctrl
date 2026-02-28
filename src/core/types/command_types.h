@@ -5,7 +5,5 @@ typedef enum
     CMD_UNKNOWN = 0,
     CMD_SET,
     CMD_GET,
-    CMD_STATUS,
-    CMD_RESET,
-    CMD_COUNT
+    CMD_STATUS
 } CommandType;

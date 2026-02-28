@@ -7,15 +7,13 @@
 typedef enum
 {
     //Eventos externos
-    EVT_NONE = 0,
+    EVT_UNKNOW = 0,
     EVT_SET,
     EVT_GET,
     EVT_START,
     EVT_STOP,
     EVT_ERROR,
     EVT_RESET,
-    EVT_MODE_SET,
-    EVT_SET_SPEED,
     //Eventos de error
     EV_PARSE_UNKNOWN,
     EV_PARSE_INVALID_PARAM,
@@ -24,7 +22,6 @@ typedef enum
     EV_HW_FAULT,
     EV_OPERATION_DONE,
     EV_TYPE_REQUEST,
-
     EVT_COUNT
 
 } EventType;
