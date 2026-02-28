@@ -5,8 +5,8 @@
 #include "core/types/event_types.h"
 #include "core/types/token_types.h"
 #include "input/command/clasifer.h"
-#include "input/command/dictionary.h"
-#include "input/command/gramar.h"
+
+//#include "input/command/gramar.h"
 
 
 

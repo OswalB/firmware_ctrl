@@ -9,14 +9,15 @@
 #include "core/types/param_types.h"
 #include "core/types/command_types.h"
 #include "lib/utils/utils.h"
-#include "input/command/dictionary.h"
 
 
-bool classify_tokens(
+
+uint8_t classify_tokens(
     char raw_tokens[][32],
     int token_count,
     Token *out_tokens)
 {
+    uint8_t errCount = 0;
     for (int i = 0; i < token_count; i++)
     {
         char *word = raw_tokens[i];
@@ -73,8 +74,9 @@ bool classify_tokens(
         else
         {
             out_tokens[i].type = TOKEN_UNKNOWN;
+            errCount++;
         }
     }
 
-    return true;
+    return errCount;
 }

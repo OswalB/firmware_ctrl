@@ -1,12 +1,42 @@
 #pragma once
 
+#include <stdint.h>
+#include <stdbool.h>
+#include "core/types/event_types.h"
+#include "core/types/domain_types.h"
+#include "core/types/param_types.h"
+
 typedef enum
 {
-    TK_UNKNOWN = 0,
-    TK_CMD,
+    TOKEN_UNKNOWN = 0,
+    TOKEN_CMD,
+    TOKEN_DOMAIN,
+    TOKEN_PARAM,
+    TOKEN_NUMBER
+} TokenType;
+
+typedef struct
+{
+    TokenType type;
+
+    union
+    {
+        EventType  cmd;
+        DomainType domain;
+        ParamType  param;
+        int32_t    number;
+    };
+
+} Token;
+
+
+
+typedef enum
+{
+    TK_CMD = 0,
     TK_DOMAIN,
-    TK_ID,
     TK_PARAM,
-    TK_VALUE,
-    TK_COUNT
+    TK_NUMBER,
+    TK_INVALID
 } TokenClass;
+

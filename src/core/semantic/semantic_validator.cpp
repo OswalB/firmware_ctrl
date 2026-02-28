@@ -3,22 +3,22 @@
 #include "domain_capabilities.h"
 #include "core/types/domain_types.h"
 #include "core/types/param_types.h"
-#include "core/types/err_types.h"
+#include "core/types/response_types.h"
 
-ErrorType validate_semantics(Event *ev)
+Response validate_semantics(Event *ev)
 {
     if (!ev)
-        return ERR_EVENT_UNKNOW;
+        return {RESP_ERR_EVENT, "Event error"};
 
     const DomainCapabilities *caps =
         get_domain_capabilities(ev->domain);
 
     if (!caps)
-        return ERR_DOMANIN;
+        return {RESP_ERR_COMMAND, "Domain error"};
 
     // 1️⃣ Validar comando permitido
     if (!(caps->supported_cmds_mask & (1u << ev->type)))
-        return ERR_COM;
+        return {RESP_ERR_COMMAND, "Command error"};
 
     // 2️⃣ Validar parámetro (si existe)
     if (ev->param < PARAM_COUNT)
@@ -26,23 +26,23 @@ ErrorType validate_semantics(Event *ev)
         if (ev->param != 0) // 0 significa "no param" en tu diseño actual
         {
             if (!(caps->supported_params_mask & (1u << ev->param)))
-                return ERR_PARAM;
+                return {RESP_ERR_COMMAND, "Param error"};
         }
     }
 
-    //validar rangos
+    // validar rangos
     if (ev->param != PARAM_UNKNOW)
     {
         if (!(caps->supported_params_mask & (1u << ev->param)))
-            return ERR_VALUE_PARAM;
+            return {RESP_ERR_COMMAND, "Value out of range"};
 
         int32_t value = ev->value;
 
         ParamRange range = caps->param_ranges[ev->param];
 
         if (value < range.min || value > range.max)
-            return ERR_RANGE_PARAM;
+            return {RESP_ERR_COMMAND, "Value error"};
     }
 
-    return ERR_NONE;
+    return {RESP_OK, ""};
 }

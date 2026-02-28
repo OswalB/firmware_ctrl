@@ -1,0 +1,54 @@
+├── src/
+│   ├── app/
+│   │   ├── app_init.cpp
+│   │   ├── app_init.h
+│   │   ├── app_run.cpp
+│   │   ├── app_run.h
+│   │   ├── main.cpp
+│   ├── core/
+│   │   ├── event/
+│   │   │   ├── event_queue.cpp
+│   │   │   ├── event_queue.h
+│   │   ├── fsm/
+│   │   │   ├── machine.cpp
+│   │   │   ├── machine.h
+│   │   ├── semantic/
+│   │   │   ├── domain_capabilities.cpp
+│   │   │   ├── domain_capabilities.h
+│   │   │   ├── semantic_validator.cpp
+│   │   │   ├── semantic_validator.h
+│   │   ├── types/
+│   │   │   ├── command_types.h
+│   │   │   ├── domain_types.h
+│   │   │   ├── event_types.cpp
+│   │   │   ├── event_types.h
+│   │   │   ├── param_types.h
+│   │   │   ├── response_types.cpp
+│   │   │   ├── response_types.h
+│   │   │   ├── token_types.cpp
+│   │   │   ├── token_types.h
+│   ├── input/
+│   │   ├── command/
+│   │   │   ├── clasifer.cpp
+│   │   │   ├── clasifer.h
+│   │   │   ├── evaluator.cpp
+│   │   │   ├── evaluator.h
+│   │   │   ├── parser.cpp
+│   │   │   ├── parser.h
+│   │   ├── serial/
+│   │   │   ├── serial_if.cpp
+│   │   │   ├── serial_if.h
+│   ├── lib/
+│   │   ├── utils/
+│   │   │   ├── utils.cpp
+│   │   │   ├── utils.h
+│   ├── platform/
+│   │   ├── transport/
+│   │   │   ├── transport.cpp
+│   │   │   ├── transport.h
+│   ├── system/
+│   │   ├── system.cpp
+│   │   ├── system.h
+│   │   ├── console/
+│   │   │   ├── console.cpp
+│   │   │   ├── console.h

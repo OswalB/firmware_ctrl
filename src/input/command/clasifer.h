@@ -4,9 +4,10 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "token.h"
+// #include "token.h"
+#include "core/types/token_types.h"
 
-bool classify_tokens(
+uint8_t classify_tokens(
     char raw_tokens[][32],
     int token_count,
     Token *out_tokens);

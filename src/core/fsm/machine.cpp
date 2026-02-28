@@ -2,14 +2,14 @@
 #include "core/fsm/machine.h"
 #include <string.h>
 #include "core/event/event_queue.h"
-//#include "core/types/event_types.h"
-//#include "modules/led/led.h"
-//#include "drivers/led_pwm/led_pwm.h"
+// #include "core/types/event_types.h"
+// #include "modules/led/led.h"
+// #include "drivers/led_pwm/led_pwm.h"
 
 static MachineState fsm_state = MS_IDLE;
 static MachineState g_state;
 
-static void fsm_push(ResponseType type, const char* text);
+void fsm_push(ResponseType type, const char *text);
 static void machine_handleEvent(const Event &evt);
 
 #define FSM_QUEUE_SIZE 8
@@ -21,7 +21,7 @@ static uint8_t queueTail = 0;
 void machine_init(void)
 {
     g_state = MS_IDLE;
-    //led_run_set(RUN_LED_IDLE);
+    // led_run_set(RUN_LED_IDLE);
     queueHead = 0;
     queueTail = 0;
     fsm_state = MS_IDLE;
@@ -30,53 +30,46 @@ void machine_init(void)
 void fsm_dispatchEvent(EventType ev)
 {
     switch (fsm_state)
-    {   
-        case MS_BUSY:
+    {
+    case MS_BUSY:
         break;
-        
-        case MS_IDLE:
 
-            if (ev == EVT_START)
-            {
-                fsm_state = MS_RUNNING;
-                fsm_push(RESP_INFO, "processing...");
-            }
-            else if (ev == EV_PARSE_UNKNOWN)
-            {
-                fsm_push(RESP_ERROR, "Unknown command7");
-            }
-            break;
+    case MS_IDLE:
 
-        case MS_RUNNING:
+        if (ev == EVT_START)
+        {
+            fsm_state = MS_RUNNING;
+            fsm_push(RESP_INFO, "processing...");
+        }
+        else if (ev == EV_PARSE_UNKNOWN)
+        {
+            fsm_push(RESP_ERROR, "Unknown command7");
+        }
+        break;
 
-            if (ev == EV_OPERATION_DONE)
-            {
-                fsm_state = MS_IDLE;
-                fsm_push(RESP_OK, "");
-            }
-            break;
+    case MS_RUNNING:
 
-        case MS_ERROR:
+        if (ev == EV_OPERATION_DONE)
+        {
+            fsm_state = MS_IDLE;
+            fsm_push(RESP_OK, "");
+        }
+        break;
 
-            if (ev == EVT_RESET)
-            {
-                fsm_state = MS_IDLE;
-                fsm_push(RESP_INFO, "reset done");
-            }
-            break;
+    case MS_ERROR:
+
+        if (ev == EVT_RESET)
+        {
+            fsm_state = MS_IDLE;
+            fsm_push(RESP_INFO, "reset done");
+        }
+        break;
     }
 }
 
-
-
-
-
-
-
 // Handler
 
-
-void fsm_handleCommand(const char* cmd)
+void fsm_handleCommand(const char *cmd)
 {
     if (fsm_state == MS_ERROR)
     {
@@ -110,11 +103,11 @@ void fsm_handleCommand(const char* cmd)
     }
 }
 
-static void fsm_push(ResponseType type, const char* text)
+void fsm_push(ResponseType type, const char *text)
 {
     uint8_t next = (queueHead + 1) % FSM_QUEUE_SIZE;
 
-    if (next != queueTail)   // evita overflow
+    if (next != queueTail) // evita overflow
     {
         responseQueue[queueHead].type = type;
         responseQueue[queueHead].text = text;
@@ -158,7 +151,7 @@ void machine_update(void)
           if (operation_finished())
         {
             fsm_dispatchEvent(EV_OPERATION_DONE);
-        }   
+        }
         */
     }
 }
@@ -180,7 +173,7 @@ static void machine_handleEvent(const Event &evt)
         break;
 
     case DOMAIN_LED:
-        //led_handleEvent(evt);
+        // led_handleEvent(evt);
         break;
 
     case DOMAIN_SENSOR:

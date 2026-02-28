@@ -5,11 +5,13 @@
 // #include "core/event/event_builder.h"
 #include "core/event/event_queue.h"
 #include "core/fsm/machine.h"
-#include "token.h"
+// #include "token.h"
+#include "core/types/token_types.h"
 #include "clasifer.h"
 #include "input/command/evaluator.h"
-//#include "input/command/semantic_validator.h"
+// #include "input/command/semantic_validator.h"
 #include "core/semantic/semantic_validator.h"
+//#include "input/command/gramar.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8
@@ -35,37 +37,46 @@ void parser_parse(const char *line)
         }
     }
 
-    Token typed[8];
+    // ----- LEXER
 
-    classify_tokens(tokens, token_count, typed);
+    Token typed[MAX_TOKENS];
+    uint8_t cntErrors = classify_tokens(tokens, token_count, typed);
 
-    Console_Print(MSG_LOG, "Clasificador ok");
-
-    Event ev;
-    if (!evaluate_command(typed, token_count, &ev))
+    if (cntErrors > 0)
     {
-        fsm_push(RESP_ERROR, "estructurra invalida en ingles");
-        //????fsm_dispatchEvent(EV_PARSE_UNKNOWN);
+        Console_Print(MSG_ERR, "%d format errors", cntErrors);
         return;
     }
-    Console_Print(MSG_LOG, "estructura valida");
 
-    ErrorType response = validate_semantics(&ev);
-    if (response != ERR_NONE)
+    Console_Print(MSG_LOG, "Classifer and gramar ok");
+
+    // ----- BUILD EVENT
+
+    Event evt;
+
+    if (!evaluate_command(typed, token_count, &evt))
     {
-        fsm_push(RESP_ERROR, "error semantico");
-        Console_Print(MSG_ERR, "err %03d %s", response, ErrorType_toString(response));
+        Console_Print(MSG_ERR, "Syntax error");
         return;
     }
-    Console_Print(MSG_LOG, "Comando valido");
-    eventQueue_push(ev);
+
+    Console_Print(MSG_LOG, "Event builded");
+
+    Response response = validate_semantics(&evt);
+    if (response.type != RESP_OK)
+    {
+        Console_Print(MSG_ERR, "Err %s", response.text);
+        return;
+    }
+    Console_Print(MSG_LOG, "OK");
+    eventQueue_push(evt);
 
     Console_Print(MSG_LOG, "ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
-                  enum_toString(ev.type, EventType_str, EVT_COUNT),
-                  ev.domain,
-                  ev.id,
-                  ev.param,
-                  ev.value);
+                  enum_toString(evt.type, EventType_str, EVT_COUNT),
+                  evt.domain,
+                  evt.id,
+                  evt.param,
+                  evt.value);
 }
 
 // --------------------------------------------

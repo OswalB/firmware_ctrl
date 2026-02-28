@@ -1,110 +1,86 @@
-PROJECT STRUCTURE
-
-├── src/
-│   ├── app/
-│   │   ├── app_init.cpp
-│   │   ├── app_init.h
-│   │   ├── app_run.cpp
-│   │   ├── app_run.h
-│   │   ├── main.cpp
-│   ├── core/
-│   │   ├── event/
-│   │   │   ├── dispatcher.cpp
-│   │   │   ├── dispatcher.h
-│   │   │   ├── event_queue.cpp
-│   │   │   ├── event_queue.h
-│   │   │   ├── event_types.h
-│   │   ├── fsm/
-│   │   │   ├── machine.cpp
-│   │   │   ├── machine.h
-│   ├── drivers/
-│   │   ├── led_pwm/
-│   │   │   ├── led_pwm.cpp
-│   │   │   ├── led_pwm.h
-│   ├── input/
-│   │   ├── command/
-│   │   │   ├── command_table.cpp
-│   │   │   ├── command_table.h
-│   │   │   ├── parser.cpp
-│   │   │   ├── parser.h
-│   │   ├── serial/
-│   │   │   ├── serial_if.cpp
-│   │   │   ├── serial_if.h
-│   ├── lib/
-│   │   ├── utils/
-│   │   │   ├── utils.cpp
-│   │   │   ├── utils.h
-│   ├── modules/
-│   │   ├── motor/
-│   │   │   ├── motor.cpp
-│   │   │   ├── motor.h
-│   │   │   ├── motor_config.cpp
-│   │   │   ├── motor_config.h
-│   │   │   ├── motor_system.cpp
-│   │   │   ├── motor_system.h
-│   │   ├── led/
-│   │   │   ├── led.cpp
-│   │   │   ├── led.h
-│   ├── platform/
-│   │   ├── transport/
-│   │   │   ├── transport.cpp
-│   │   │   ├── transport.h
 
 
-NUEVA INFRAESTRUCTRUCTURA
+Y eliminar validaciones estructurales del evaluate_command().
+Simplifica evaluate_command() para que SOLO construya el Event
 
--*-*-*-*---*-*------*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+Lexer
+Grammar parser
+Semantic layer
+Execution
 
-serial_if → parser → command_resolver → event_builder → event_queue
+INPUT STRING
+   ↓
+split_raw_tokens()
+   ↓
+classify_tokens()      ← LEXER
+   ↓
+match_grammar()        ← PARSER (estructura)
+   ↓
+build_event()          ← AST builder
+   ↓
+semantic_validate()    ← lógica de dominio (domain_table)
+   ↓
+execute_event()
 
-src/
-│
-├── app/
-│   ├── app_init.cpp
-│   ├── app_run.cpp
-│   └── main.cpp
-│
-├── core/
-│   │
-│   ├── command/                    ← NUEVO SUBSISTEMA
-│   │   ├── command_node.h
-│   │   ├── command_tree.cpp
-│   │   ├── command_tree.h
-│   │   ├── command_resolver.cpp
-│   │   └── command_resolver.h
-│   │
-│   ├── event/
-│   │   ├── event_builder.cpp       ← NUEVO
-│   │   ├── event_builder.h
-│   │   ├── event_queue.cpp
-│   │   ├── event_queue.h
-│   │   └── event_types.h
-│   │
-│   └── fsm/
-│       ├── machine.cpp
-│       └── machine.h
-│
-├── input/
-│   ├── parser/                     ← SEPARADO DE COMMAND
-│   │   ├── parser.cpp
-│   │   └── parser.h
-│   │
-│   └── serial/
-│       ├── serial_if.cpp
-│       └── serial_if.h
-│
-├── modules/
-│   ├── motor/
-│   │   ├── motor.cpp
-│   │   ├── motor.h
-│   │   ├── motor_commands.cpp      ← NUEVO
-│   │   └── motor_commands.h
-│   │
-│   └── led/
-│       ├── led.cpp
-│       ├── led.h
-│       ├── led_commands.cpp ← NUEVO
-│       └── led_commands.h
-│
-├── drivers/
-└── platform/
+NUEVO COMANDO, DOMINIO, PARAMETRO:
+
+* Registrar en classify_tokens()
+* Registrar types: Command , Domain o Param respectivo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*-*-*-*-*-*-*-*-*-*-*- reciclar codigo  -*-*-*-*-*-*-*-*-*-
+
+#include <stddef.h>
+#include "resp_types.h"
+
+typedef struct
+{
+    ErrorType type;
+    const char* text;
+} ErrorMap;
+
+static const ErrorMap error_map[] =
+{
+    { ERR_UNKNOW,        "Unknown error" },
+    { ERR_NONE,          "CMD OK" },
+    { ERR_COMMAND,       "Command error" },
+
+};
+
+const char* ErrorType_toString(ErrorType err)
+{
+    for (size_t i = 0; i < sizeof(error_map)/sizeof(error_map[0]); ++i)
+    {
+        if (error_map[i].type == err)
+            return error_map[i].text;
+    }
+
+    return "Invalid response code";
+}

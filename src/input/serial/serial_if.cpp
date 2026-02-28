@@ -2,7 +2,7 @@
 #include "input/serial/serial_if.h"
 #include "input/command/parser.h"
 #include "core/fsm/machine.h"
-#include  "system/console/console.h"
+#include "system/console/console.h"
 
 #define SERIAL_BAUDRATE 115200
 #define RX_BUFFER_SIZE 128
@@ -46,10 +46,10 @@ void serial_update(void)
           rxBuffer[rxIndex] = '\0'; // Termina string
           serial_writeln("\r");
           parser_parse(rxBuffer); // Llama parser
-          
+
           if (fsm_getState() == MS_IDLE)
           {
-            //serial_write(">> ");
+            // serial_write(">> ");
           }
           rxIndex = 0; // Reset buffer
         }
@@ -81,42 +81,44 @@ void serial_writeln(const char *msg)
 
 void serial_drain_fsm(void)
 {
-    while (fsm_hasOutput())
+  while (fsm_hasOutput())
+  {
+    Response r = fsm_getOutput();
+
+    switch (r.type)
     {
-        Response r = fsm_getOutput();
+    case RESP_OK:
+      serial_writeln("ok");
+      break;
 
-        switch (r.type)
-        {
-            case RESP_OK:
-                serial_writeln("ok");
-                break;
+    case RESP_ERROR:
+      Console_Print(MSG_ERR, r.text);
+      break;
 
-            case RESP_ERROR:
-                Console_Print(MSG_ERR, r.text);
-                break;
+    case RESP_FAULT:
+      serial_write("SYSTEM FAULT - ");
+      serial_writeln(r.text);
+      break;
 
-            case RESP_FAULT:
-                serial_write("SYSTEM FAULT - ");
-                serial_writeln(r.text);
-                break;
-
-            case RESP_INFO:
-                serial_writeln(r.text);
-                break;
-        }
+    case RESP_INFO:
+      serial_writeln(r.text);
+      break;
+    default:
+      break;
     }
+  }
 
-    if(g_consoleStatus == CONS_BUSY)
-    {
-      serial_write(">> ");
-      g_consoleStatus = CONS_READY;
-    }
-  
-    // Prompt solo si la FSM está en IDLE
-    /*if (fsm_getState() == MS_IDLE)
-    {
-        
-    }*/
+  if (g_consoleStatus == CONS_BUSY)
+  {
+    serial_write(">> ");
+    g_consoleStatus = CONS_READY;
+  }
+
+  // Prompt solo si la FSM está en IDLE
+  /*if (fsm_getState() == MS_IDLE)
+  {
+
+  }*/
 }
 
 void set_stateConsole(Console_status st)
