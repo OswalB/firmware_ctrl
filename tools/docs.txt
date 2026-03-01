@@ -1,7 +1,14 @@
 
+***** ESTRUCTURA *****
 
-Y eliminar validaciones estructurales del evaluate_command().
-Simplifica evaluate_command() para que SOLO construya el Event
+app        → orquesta
+core       → reglas del sistema (puro)
+input      → genera eventos
+modules    → funcionalidades del sistema
+drivers    → hardware
+platform   → wrappers base
+
+
 
 Lexer
 Grammar parser

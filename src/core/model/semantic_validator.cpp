@@ -1,9 +1,9 @@
 #include "semantic_validator.h"
-#include "core/types/event_types.h"
+#include "core/model/event_types.h"
 #include "domain_capabilities.h"
-#include "core/types/domain_types.h"
-#include "core/types/param_types.h"
-#include "core/types/response_types.h"
+#include "core/model/domain_types.h"
+#include "core/model/param_types.h"
+#include "core/model/response_types.h"
 
 Response validate_semantics(Event *ev)
 {

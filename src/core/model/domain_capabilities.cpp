@@ -1,10 +1,10 @@
 #include <stddef.h>
 
 #include "domain_capabilities.h"
-#include "core/types/event_types.h"
-#include "system/console/console.h"
-#include "core/types/domain_types.h"
-#include "core/types/event_types.h"
+#include "core/model/event_types.h"
+#include "modules/console/console.h"
+#include "core/model/domain_types.h"
+#include "core/model/event_types.h"
 
 static const DomainCapabilities domain_table[] =
     {
@@ -96,11 +96,6 @@ bool validate_domain_capabilities_table(void)
                 (caps->supported_params_mask & (1u << p)) != 0;
 
             ParamRange range = caps->param_ranges[p];
-
-            // bool range_defined =
-            //!(range.min == 0 && range.max == 0);
-
-            // bool range_defined = range.has_range;
 
             if (param_supported)
             {

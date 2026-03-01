@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "evaluator.h"
-#include "core/types/event_types.h"
-#include "core/types/token_types.h"
+#include "core/model/event_types.h"
+#include "core/model/token_types.h"
 #include "input/command/clasifer.h"
 
 //#include "input/command/gramar.h"

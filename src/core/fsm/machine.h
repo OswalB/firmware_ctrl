@@ -1,6 +1,7 @@
 #pragma once
-#include "core/types/event_types.h"
-#include "core/types/response_types.h"
+
+#include "core/model/event_types.h"
+#include "core/model/response_types.h"
 
 typedef enum
 {

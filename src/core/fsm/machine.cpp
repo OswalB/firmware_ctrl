@@ -143,16 +143,7 @@ void machine_update(void)
 
     if (fsm_state == MS_RUNNING)
     {
-        /*if (timeout_detected())
-        {
-            fsm_state = MS_ERROR;
-            fsm_push(RESP_FAULT, "timeout");
-        }
-          if (operation_finished())
-        {
-            fsm_dispatchEvent(EV_OPERATION_DONE);
-        }
-        */
+    
     }
 }
 

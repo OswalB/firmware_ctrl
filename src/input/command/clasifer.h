@@ -1,11 +1,9 @@
 #pragma once
 
-#include "core/types/token_types.h"
+#include "core/model/token_types.h"
 
 #include <stdint.h>
 #include <stdbool.h>
-// #include "token.h"
-#include "core/types/token_types.h"
 
 uint8_t classify_tokens(
     char raw_tokens[][32],

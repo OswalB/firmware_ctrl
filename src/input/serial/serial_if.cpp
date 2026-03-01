@@ -2,7 +2,7 @@
 #include "input/serial/serial_if.h"
 #include "input/command/parser.h"
 #include "core/fsm/machine.h"
-#include "system/console/console.h"
+#include "modules/console/console.h"
 
 #define SERIAL_BAUDRATE 115200
 #define RX_BUFFER_SIZE 128
@@ -113,12 +113,6 @@ void serial_drain_fsm(void)
     serial_write(">> ");
     g_consoleStatus = CONS_READY;
   }
-
-  // Prompt solo si la FSM está en IDLE
-  /*if (fsm_getState() == MS_IDLE)
-  {
-
-  }*/
 }
 
 void set_stateConsole(Console_status st)

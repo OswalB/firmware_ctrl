@@ -4,10 +4,10 @@
 
 #include "lib/utils/utils.h"
 #include "clasifer.h"
-#include "core/types/token_types.h"
-#include "core/types/domain_types.h"
-#include "core/types/param_types.h"
-#include "core/types/command_types.h"
+#include "core/model/token_types.h"
+#include "core/model/domain_types.h"
+#include "core/model/param_types.h"
+#include "core/model/command_types.h"
 #include "lib/utils/utils.h"
 
 

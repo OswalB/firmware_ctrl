@@ -1,17 +1,12 @@
 #include "parser.h"
-#include "system/console/console.h"
+#include "modules/console/console.h"
 #include "lib/utils/utils.h"
-// #include "core/command/command_resolver.h"
-// #include "core/event/event_builder.h"
 #include "core/event/event_queue.h"
 #include "core/fsm/machine.h"
-// #include "token.h"
-#include "core/types/token_types.h"
+#include "core/model/token_types.h"
 #include "clasifer.h"
 #include "input/command/evaluator.h"
-// #include "input/command/semantic_validator.h"
-#include "core/semantic/semantic_validator.h"
-//#include "input/command/gramar.h"
+#include "core/model/semantic_validator.h"
 
 #define MAX_TOKEN_LENGTH 32
 #define MAX_TOKENS 8

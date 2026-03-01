@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "core/types/event_types.h"
+#include "core/model/event_types.h"
 
 #define EVENT_QUEUE_SIZE 10
 

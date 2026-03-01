@@ -2,9 +2,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "core/types/event_types.h"
-#include "core/types/domain_types.h"
-#include "core/types/param_types.h"
+#include "core/model/event_types.h"
+#include "core/model/domain_types.h"
+#include "core/model/param_types.h"
 
 typedef enum
 {

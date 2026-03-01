@@ -3,8 +3,8 @@
 #include "input/serial/serial_if.h"
 #include "core/fsm/machine.h"
 // #include "modules/motor/motor.h"
-#include "system/console/console.h"
-#include "system/system.h"
+#include "modules/console/console.h"
+#include "modules/system/system.h"
 
 void app_init()
 {

@@ -1,7 +1,7 @@
 #include "system.h"
 #include "platform/transport/transport.h"
-#include "core/semantic/domain_capabilities.h"
-#include "system/console/console.h"
+#include "core/model/domain_capabilities.h"
+#include "modules/console/console.h"
 
 void system_init(void)
 {

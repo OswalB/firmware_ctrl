@@ -1,8 +1,8 @@
 #pragma once
 
 #include <stdint.h>
-#include "core/types/domain_types.h"
-#include "core/types/param_types.h"
+#include "core/model/domain_types.h"
+#include "core/model/param_types.h"
 
 typedef struct
 {
