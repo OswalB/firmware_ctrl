@@ -14,9 +14,9 @@
 static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH]);
 
 // --------------------------------------------
-// Parser principal
+// Parser text (cli)
 // --------------------------------------------
-void parser_parse(const char *line)
+    void parser_parse_line(const char *line)
 {
     char tokens[MAX_TOKENS][MAX_TOKEN_LENGTH];
     int token_count = tokenize(line, tokens);
@@ -24,16 +24,14 @@ void parser_parse(const char *line)
     if (token_count == 0)
         return;
 
+    // Normalización
     for (int i = 0; i < token_count; i++)
     {
         if (!utils_is_numeric(tokens[i]))
-        {
             utils_to_uppercase(tokens[i]);
-        }
     }
 
-    // ----- LEXER
-
+    // --- LEXER
     Token typed[MAX_TOKENS];
     uint8_t cntErrors = classify_tokens(tokens, token_count, typed);
 
@@ -43,36 +41,52 @@ void parser_parse(const char *line)
         return;
     }
 
-    Console_Print(MSG_LOG, "Classifer and gramar ok");
+    Console_Print(MSG_LOG, "Lexer OK");
 
-    // ----- BUILD EVENT
+    // --- MOTOR tk
+    parser_process_tokens(typed, token_count);
+}
 
+// --------------------------------------------
+// Parser tokens (core)
+// --------------------------------------------
+
+bool parser_process_tokens(Token *typed, int token_count)
+{
     Event evt;
 
+    // --- SINTAXIS
     if (!evaluate_command(typed, token_count, &evt))
     {
         Console_Print(MSG_ERR, "Syntax error");
-        return;
+        return false;
     }
 
-    Console_Print(MSG_LOG, "Event builded");
+    Console_Print(MSG_LOG, "Event built");
 
+    // --- SEMÁNTICA
     Response response = validate_semantics(&evt);
     if (response.type != RESP_OK)
     {
         Console_Print(MSG_ERR, "Err %s", response.text);
-        return;
+        return false;
     }
-    Console_Print(MSG_LOG, "OK");
+
+    // --- DISPATCH
     eventQueue_push(evt);
 
-    Console_Print(MSG_LOG, "ok evt pushed cmd=%s dom=%d id=%d param=%d value=%ld",
+    Console_Print(MSG_LOG,
+                  "OK evt pushed com=%d event=%s dom=%d id=%d param=%d value=%ld",
+                  evt.command,
                   enum_toString(evt.type, EventType_str, EVT_COUNT),
                   evt.domain,
                   evt.id,
                   evt.param,
                   evt.value);
+
+    return true;
 }
+
 
 // --------------------------------------------
 // Tokenizador simple

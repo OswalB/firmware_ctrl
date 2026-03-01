@@ -1,0 +1,195 @@
+Cómo agregar nuevos Commands, Domains y Params sin romper el sistema
+🧱 Arquitectura del sistema
+
+El flujo del DSL es:
+
+Texto (CLI)
+   ↓
+tokenize()
+   ↓
+classify_tokens()
+   ↓
+evaluate_command()
+   ↓
+validate_semantics()
+   ↓
+eventQueue_push()
+   ↓
+FSM / ejecución
+
+El sistema está dividido en 4 capas:
+
+Capa	Responsabilidad
+Lexer	Convertir texto a Token
+Parser	Validar estructura sintáctica
+Semántica	Validar rangos y coherencia
+Ejecución	Ejecutar acción
+🔷 1️⃣ Agregar un NUEVO DOMAIN
+Paso 1 — domain_types.h
+typedef enum
+{
+    DOMAIN_LED = 0,
+    DOMAIN_SENSOR,
+    DOMAIN_MOTOR,   // ← NUEVO
+    DOMAIN_COUNT
+} DomainType;
+
+⚠ Siempre mantener DOMAIN_COUNT al final.
+
+Paso 2 — Tabla del lexer
+
+Agregar en domain_table:
+
+{"MOTOR", DOMAIN_MOTOR},
+
+Si se omite este paso → el dominio nunca será reconocido.
+
+Paso 3 — validate_semantics()
+
+Definir límites:
+
+case DOMAIN_MOTOR:
+    if (evt->id >= MAX_MOTORS)
+        return RESP_ERR_ID;
+    break;
+
+Nunca validar rangos en el parser.
+
+Paso 4 — FSM / ejecución
+
+Agregar en dispatcher:
+
+case EVT_SET:
+    if (evt->domain == DOMAIN_MOTOR)
+        motor_set(evt->id, evt->value);
+    break;
+🔷 2️⃣ Agregar un NUEVO COMMAND
+Paso 1 — event_types.h
+typedef enum
+{
+    EVT_GET = 0,
+    EVT_SET,
+    EVT_TOGGLE,   // ← NUEVO
+    EVT_COUNT
+} EventType;
+Paso 2 — Tabla del lexer
+{"TOGGLE", EVT_TOGGLE},
+Paso 3 — evaluate_command()
+
+Si la estructura cambia, agregar validación.
+
+Ejemplo:
+
+if (tokens[0].cmd == EVT_TOGGLE)
+{
+    if (token_count != 3)
+        return false;
+
+    if (tokens[1].type != TOKEN_DOMAIN ||
+        tokens[2].type != TOKEN_NUMBER)
+        return false;
+
+    out->domain = tokens[1].domain;
+    out->id     = tokens[2].number;
+    return true;
+}
+
+Si no requiere estructura nueva, no es necesario modificar.
+
+Paso 4 — FSM
+case EVT_TOGGLE:
+    toggle_device(evt.domain, evt.id);
+    break;
+🔷 3️⃣ Agregar un NUEVO PARAM
+Paso 1 — param_types.h
+typedef enum
+{
+    PARAM_BRIGHTNESS = 0,
+    PARAM_SPEED,   // ← NUEVO
+    PARAM_COUNT
+} ParamType;
+Paso 2 — Tabla del lexer
+{"SPEED", PARAM_SPEED},
+Paso 3 — validate_semantics()
+
+Definir límites:
+
+if (evt->param == PARAM_SPEED)
+{
+    if (evt->value < 0 || evt->value > 5000)
+        return RESP_ERR_RANGE;
+}
+
+Nunca validar límites en evaluate_command().
+
+🔷 4️⃣ Agregar límites nuevos
+
+Siempre en:
+
+Response validate_semantics(Event *evt)
+
+Separación correcta:
+
+Validación	Dónde va
+Tipo correcto de token	Parser
+Orden correcto	Parser
+Rango válido	Semántica
+ID existente	Semántica
+Estado permitido	Semántica
+🔷 5️⃣ Checklist obligatorio antes de commit
+
+Cuando agregues algo nuevo, verifica:
+
+☐ Enum actualizado
+☐ COUNT actualizado
+☐ Tabla del lexer actualizada
+☐ evaluate_command revisado
+☐ validate_semantics actualizado
+☐ FSM actualizado
+☐ Logging soporta nuevo enum
+☐ Tests agregados
+☐ Compila sin warnings
+
+🔷 6️⃣ Reglas anti-bug silencioso
+
+✔ No usar default: en switches de enums críticos
+✔ Activar:
+
+-Wswitch
+-Wswitch-enum
+-Wimplicit-fallthrough
+-Wmissing-field-initializers
+
+✔ Mantener *_COUNT como último valor del enum
+✔ No mezclar sintaxis con semántica
+✔ No validar rangos en el parser
+
+🔷 7️⃣ Ejemplo completo de nuevo comando
+
+Entrada:
+
+SET MOTOR 1 SPEED 3000
+
+Flujo:
+
+Lexer → TOKEN_CMD TOKEN_DOMAIN TOKEN_NUMBER TOKEN_PARAM TOKEN_NUMBER
+
+Parser → estructura válida
+
+Semántica → rango válido
+
+FSM → motor_set_speed(1, 3000)
+
+🔷 8️⃣ Principios del DSL
+
+Parser solo valida estructura.
+
+Semántica valida coherencia.
+
+FSM ejecuta.
+
+Nunca duplicar validaciones.
+
+Siempre mantener coherencia enum ↔ tabla ↔ switch.
+
+🏁 Fin de la guías

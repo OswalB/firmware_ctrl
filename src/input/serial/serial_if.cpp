@@ -45,7 +45,7 @@ void serial_update(void)
         {
           rxBuffer[rxIndex] = '\0'; // Termina string
           serial_writeln("\r");
-          parser_parse(rxBuffer); // Llama parser
+          parser_parse_line(rxBuffer); // Llama parser
 
           if (fsm_getState() == MS_IDLE)
           {
