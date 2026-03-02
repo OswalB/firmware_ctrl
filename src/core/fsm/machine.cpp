@@ -2,6 +2,8 @@
 #include "core/fsm/machine.h"
 #include <string.h>
 #include "core/event/event_queue.h"
+#include "modules/console/console.h"
+#include "core/domains/domain_led.h"
 // #include "core/types/event_types.h"
 // #include "modules/led/led.h"
 // #include "drivers/led_pwm/led_pwm.h"
@@ -68,7 +70,7 @@ void fsm_dispatchEvent(EventType ev)
 }
 
 // Handler
-
+/*
 void fsm_handleCommand(const char *cmd)
 {
     if (fsm_state == MS_ERROR)
@@ -102,6 +104,7 @@ void fsm_handleCommand(const char *cmd)
         fsm_push(RESP_ERROR, "unknown command++");
     }
 }
+*/
 
 void fsm_push(ResponseType type, const char *text)
 {
@@ -140,14 +143,9 @@ void machine_update(void)
     {
         machine_handleEvent(evt);
     }
-
-    if (fsm_state == MS_RUNNING)
-    {
-    
-    }
 }
 
-static void machine_handleEvent(const Event &evt)
+ void machine_handleEvent(const Event &evt)
 {
     // 🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
@@ -159,19 +157,20 @@ static void machine_handleEvent(const Event &evt)
     // 🔵 2. Delegación por dominio
     switch (evt.domain)
     {
-    case DOMAIN_MOTOR:
-        // motor_handleEvent(evt);
-        break;
+        case DOMAIN_LED:
+            machine_led_handle(evt);
+            Console_Print(MSG_DBG, "routing LED");
+            break;
 
-    case DOMAIN_LED:
-        // led_handleEvent(evt);
-        break;
+        case DOMAIN_MOTOR:
+            // machine_motor_handle(evt);
+            Console_Print(MSG_DBG, "routing MOTOR");
+            break;
 
-    case DOMAIN_SENSOR:
-        // sensor_handleEvent(evt);
-        break;
-
-    default:
-        break;
+        default:
+            Console_Print(MSG_ERR,
+                "Unknown domain %d\n",
+                evt.domain);
+            break;
     }
 }

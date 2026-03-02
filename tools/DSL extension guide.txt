@@ -118,15 +118,12 @@ Range defined but param not supported
 Paso 2 — Tabla del lexer
 input/command/classifer
 {"SPEED", PARAM_SPEED},
-Paso 3 — validate_semantics()
+Paso 3 — core/model/domain_capabilities
+ nuevo param en dominios que aplique
 
 Definir límites:
-
-if (evt->param == PARAM_SPEED)
-{
-    if (evt->value < 0 || evt->value > 5000)
-        return RESP_ERR_RANGE;
-}
+nuevo param_range en todos los dominios
+[PARAM_SPEED] = {.min = 0, .max = 100, .has_range = true},
 
 Nunca validar límites en evaluate_command().
 

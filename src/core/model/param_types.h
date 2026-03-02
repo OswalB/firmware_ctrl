@@ -7,5 +7,6 @@ typedef enum
     PARAM_STATE,
     PARAM_SPEED,
     PARAM_DUTY,
+    PARAM_TIME,
     PARAM_COUNT
 } ParamType;

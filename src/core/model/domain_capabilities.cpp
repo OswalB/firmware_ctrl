@@ -12,8 +12,9 @@ static const DomainCapabilities domain_table[] =
     {
         {.domain = DOMAIN_LED,
          .supported_params_mask =
-             (1u << PARAM_STATE)||
-             (1u << PARAM_DUTY),
+             (1u << PARAM_STATE) |
+             (1u << PARAM_DUTY) |
+             (1u << PARAM_TIME),
          .supported_cmds_mask =
              (1u << EVT_SET) |
              (1u << EVT_GET),
@@ -21,8 +22,10 @@ static const DomainCapabilities domain_table[] =
              {
                  [PARAM_UNKNOW] = PARAM_UNUSED,
                  [PARAM_STATE] = {.min = 0, .max = 1, .has_range = true},
-                 [PARAM_SPEED] = PARAM_UNUSED},
-                 {0,100,true},
+                 [PARAM_SPEED] = PARAM_UNUSED,
+                 [PARAM_DUTY] = {.min = 0, .max = 100, .has_range = true},
+                 [PARAM_TIME] = {.min = 0, .max = 60000, .has_range = true}},
+
          .id_range = {.min = 0, .max = 2, .has_range = true}},
         {.domain = DOMAIN_MOTOR,
          .supported_params_mask =
@@ -34,17 +37,20 @@ static const DomainCapabilities domain_table[] =
              {
                  [PARAM_UNKNOW] = PARAM_UNUSED,
                  [PARAM_STATE] = PARAM_UNUSED,
-                 [PARAM_SPEED] = {.min = 0, .max = 100, .has_range = true}},
+                 [PARAM_SPEED] = {.min = 0, .max = 100, .has_range = true},
+                 [PARAM_DUTY] = PARAM_UNUSED,
+                 [PARAM_TIME] = PARAM_UNUSED},
          .id_range = {.min = 0, .max = 3, .has_range = true}},
         {.domain = DOMAIN_SENSOR,
          .supported_params_mask =
              (1u << PARAM_STATE),
          .supported_cmds_mask = (1u << EVT_GET),
          .param_ranges = {
-            [PARAM_UNKNOW] = PARAM_UNUSED,
-            [PARAM_STATE ] = {.min = 0, .max=0,.has_range= true}, // PARAM_STATE
-             {0, 0, false}  // PARAM_SPEED
-         },
+             [PARAM_UNKNOW] = PARAM_UNUSED,
+             [PARAM_STATE] = {.min = 0, .max = 0, .has_range = true}, // PARAM_STATE
+             {0, 0, false},
+             [PARAM_DUTY] = PARAM_UNUSED,
+             [PARAM_TIME] = PARAM_UNUSED},
          {0, 10, true}}};
 
 const DomainCapabilities *
