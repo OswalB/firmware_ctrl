@@ -64,7 +64,7 @@ case EVT_SET:
         motor_set(evt->id, evt->value);
     break;
 🔷 2️⃣ Agregar un NUEVO COMMAND
-Paso 1 — event_types.h
+Paso 1 — core/model/event_types.h
 typedef enum
 {
     EVT_GET = 0,
@@ -72,11 +72,13 @@ typedef enum
     EVT_TOGGLE,   // ← NUEVO
     EVT_COUNT
 } EventType;
-Paso 2 — Tabla del lexer
+
+Paso 2 — Tabla del lexer  ?????????
 {"TOGGLE", EVT_TOGGLE},
+
 Paso 3 — evaluate_command()
 
-Si la estructura cambia, agregar validación.
+SOLO Si la estructura cambia, agregar validación.
 
 Ejemplo:
 
@@ -100,15 +102,21 @@ Paso 4 — FSM
 case EVT_TOGGLE:
     toggle_device(evt.domain, evt.id);
     break;
+
 🔷 3️⃣ Agregar un NUEVO PARAM
-Paso 1 — param_types.h
+Paso 1 — core/model/param_types.h
 typedef enum
 {
     PARAM_BRIGHTNESS = 0,
     PARAM_SPEED,   // ← NUEVO
     PARAM_COUNT
 } ParamType;
+
+
+Range defined but param not supported
+
 Paso 2 — Tabla del lexer
+input/command/classifer
 {"SPEED", PARAM_SPEED},
 Paso 3 — validate_semantics()
 

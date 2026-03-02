@@ -76,8 +76,7 @@ bool parser_process_tokens(Token *typed, int token_count)
     eventQueue_push(evt);
 
     Console_Print(MSG_LOG,
-                  "OK evt pushed com=%d event=%s dom=%d id=%d param=%d value=%ld",
-                  evt.command,
+                  "OK evt pushed event=%s dom=%d id=%d param=%d value=%ld",
                   enum_toString(evt.type, EventType_str, EVT_COUNT),
                   evt.domain,
                   evt.id,

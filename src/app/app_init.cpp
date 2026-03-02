@@ -12,7 +12,7 @@ void app_init()
     // led_init();
     Console_SetMode(CONSOLE_ALL);
     serial_init();
-    serial_writeln("=== Firmaware V1.002 ===");
+    serial_writeln("=== Firmaware V1.003 ===");
 
     machine_init();
     system_init();

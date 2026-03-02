@@ -30,7 +30,7 @@ Response validate_semantics(Event *ev)
         }
     }
 
-    // validar rangos
+    // validar rangos de parametro
     if (ev->param != PARAM_UNKNOW)
     {
         if (!(caps->supported_params_mask & (1u << ev->param)))
@@ -41,8 +41,15 @@ Response validate_semantics(Event *ev)
         ParamRange range = caps->param_ranges[ev->param];
 
         if (value < range.min || value > range.max)
-            return {RESP_ERR_COMMAND, "Value error"};
+            return {RESP_ERR_COMMAND, "Param value error"};
     }
+
+    // validar rangos de dominio
+
+
+    if (ev->id < caps->id_range.min || ev->id > caps->id_range.max)
+        return {RESP_ERR_COMMAND, "Domain ID range error"};
+
 
     return {RESP_OK, ""};
 }

@@ -62,6 +62,11 @@ uint8_t classify_tokens(
             out_tokens[i].type = TOKEN_PARAM;
             out_tokens[i].param = PARAM_SPEED;
         }
+        else if (strcmp(word, "DUTY") == 0)
+        {
+            out_tokens[i].type = TOKEN_PARAM;
+            out_tokens[i].param = PARAM_DUTY;
+        }
 
         // NUMBER
         else if (utils_is_numeric(word))

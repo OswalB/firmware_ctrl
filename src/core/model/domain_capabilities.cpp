@@ -6,32 +6,46 @@
 #include "core/model/domain_types.h"
 #include "core/model/event_types.h"
 
+#define PARAM_UNUSED {0, 0, false}
+
 static const DomainCapabilities domain_table[] =
     {
-        {DOMAIN_LED,
-         (1u << PARAM_STATE),
-         (1u << EVT_SET) | (1u << EVT_GET),
-         {
-             {0, 0, false}, // PARAM_NONE
-             {0, 1, true},  // PARAM_STATE
+        {.domain = DOMAIN_LED,
+         .supported_params_mask =
+             (1u << PARAM_STATE)||
+             (1u << PARAM_DUTY),
+         .supported_cmds_mask =
+             (1u << EVT_SET) |
+             (1u << EVT_GET),
+         .param_ranges =
+             {
+                 [PARAM_UNKNOW] = PARAM_UNUSED,
+                 [PARAM_STATE] = {.min = 0, .max = 1, .has_range = true},
+                 [PARAM_SPEED] = PARAM_UNUSED},
+                 {0,100,true},
+         .id_range = {.min = 0, .max = 2, .has_range = true}},
+        {.domain = DOMAIN_MOTOR,
+         .supported_params_mask =
+             (1u << PARAM_SPEED),
+         .supported_cmds_mask =
+             (1u << EVT_SET) |
+             (1u << EVT_GET),
+         .param_ranges =
+             {
+                 [PARAM_UNKNOW] = PARAM_UNUSED,
+                 [PARAM_STATE] = PARAM_UNUSED,
+                 [PARAM_SPEED] = {.min = 0, .max = 100, .has_range = true}},
+         .id_range = {.min = 0, .max = 3, .has_range = true}},
+        {.domain = DOMAIN_SENSOR,
+         .supported_params_mask =
+             (1u << PARAM_STATE),
+         .supported_cmds_mask = (1u << EVT_GET),
+         .param_ranges = {
+            [PARAM_UNKNOW] = PARAM_UNUSED,
+            [PARAM_STATE ] = {.min = 0, .max=0,.has_range= true}, // PARAM_STATE
              {0, 0, false}  // PARAM_SPEED
-         }},
-        {DOMAIN_MOTOR,
-         (1u << PARAM_SPEED),
-         (1u << EVT_SET) | (1u << EVT_GET),
-         {
-             {0, 0, false}, // PARAM_NONE
-             {0, 0, false}, // PARAM_STATE
-             {0, 100, true} // PARAM_SPEED
-         }},
-        {DOMAIN_SENSOR,
-         0,
-         (1u << EVT_GET),
-         {
-             {0, 0, false}, // PARAM_NONE
-             {0, 0, false}, // PARAM_STATE
-             {0, 0, false}  // PARAM_SPEED
-         }}};
+         },
+         {0, 10, true}}};
 
 const DomainCapabilities *
 get_domain_capabilities(DomainType domain)
@@ -78,16 +92,31 @@ bool validate_domain_capabilities_table(void)
         if (caps->supported_cmds_mask &
             ~((1u << EVT_COUNT) - 1))
         {
-            Console_Print(MSG_LOG, "Invalid command mask");
+            Console_Print(MSG_LOG, "Invalid event command mask");
             return false;
         }
 
         if (caps->supported_params_mask &
             ~((1u << PARAM_COUNT) - 1))
         {
-            Console_Print(MSG_LOG, "Invalid command mask");
+            Console_Print(MSG_LOG, "Invalid param command mask");
 
             return false;
+        }
+
+        // Validación de rango de instancias del dominio
+        if (!caps->id_range.has_range)
+        {
+            Console_Print(MSG_LOG, "Domain without ID range");
+            return false;
+        }
+        if (caps->id_range.has_range)
+        {
+            if (caps->id_range.min > caps->id_range.max)
+            {
+                Console_Print(MSG_LOG, "Invalid domain ID range");
+                return false;
+            }
         }
 
         for (uint8_t p = 0; p < PARAM_COUNT; p++)
