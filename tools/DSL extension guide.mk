@@ -19,11 +19,12 @@ FSM / ejecución
 
 El sistema está dividido en 4 capas:
 
-Capa	Responsabilidad
-Lexer	Convertir texto a Token
-Parser	Validar estructura sintáctica
+Capa	    Responsabilidad
+Lexer	    Convertir texto a Token
+Parser	    Validar estructura sintáctica
 Semántica	Validar rangos y coherencia
 Ejecución	Ejecutar acción
+
 🔷 1️⃣ Agregar un NUEVO DOMAIN
 Paso 1 — domain_types.h
 typedef enum
