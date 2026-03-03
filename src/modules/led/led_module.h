@@ -38,4 +38,5 @@ namespace led
     bool setState(uint8_t id, int32_t state);
 
     void led_init(void);
+    void led_update(void);
 }

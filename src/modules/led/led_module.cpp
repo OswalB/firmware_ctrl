@@ -70,4 +70,11 @@ namespace led
         // led_err_set(ERR_LED_OFF);
         // led_run_set(RUN_LED_OFF);
     }
+
+    void led_update(void){
+        for (uint8_t i = 0; i < static_cast<uint8_t>(LedId::COUNT); i++)
+    {
+        leds[i].update();
+    }
+    }
 }//namespace led
