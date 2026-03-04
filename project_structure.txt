@@ -6,27 +6,33 @@
 │   │   ├── app_run.h
 │   │   ├── main.cpp
 │   ├── core/
+│   │   ├── domains/
+│   │   │   ├── domain_led.cpp
+│   │   │   ├── domain_led.h
 │   │   ├── event/
 │   │   │   ├── event_queue.cpp
 │   │   │   ├── event_queue.h
 │   │   ├── fsm/
 │   │   │   ├── machine.cpp
 │   │   │   ├── machine.h
-│   │   ├── semantic/
+│   │   ├── model/
+│   │   │   ├── command_types.h
 │   │   │   ├── domain_capabilities.cpp
 │   │   │   ├── domain_capabilities.h
-│   │   │   ├── semantic_validator.cpp
-│   │   │   ├── semantic_validator.h
-│   │   ├── types/
-│   │   │   ├── command_types.h
 │   │   │   ├── domain_types.h
 │   │   │   ├── event_types.cpp
 │   │   │   ├── event_types.h
 │   │   │   ├── param_types.h
 │   │   │   ├── response_types.cpp
 │   │   │   ├── response_types.h
+│   │   │   ├── semantic_validator.cpp
+│   │   │   ├── semantic_validator.h
 │   │   │   ├── token_types.cpp
 │   │   │   ├── token_types.h
+│   ├── drivers/
+│   │   ├── led_pwm/
+│   │   │   ├── led_pwm.cpp
+│   │   │   ├── led_pwm.h
 │   ├── input/
 │   │   ├── command/
 │   │   │   ├── clasifer.cpp
@@ -35,6 +41,7 @@
 │   │   │   ├── evaluator.h
 │   │   │   ├── parser.cpp
 │   │   │   ├── parser.h
+│   │   ├── evaluate/
 │   │   ├── serial/
 │   │   │   ├── serial_if.cpp
 │   │   │   ├── serial_if.h
@@ -42,13 +49,19 @@
 │   │   ├── utils/
 │   │   │   ├── utils.cpp
 │   │   │   ├── utils.h
+│   ├── modules/
+│   │   ├── console/
+│   │   │   ├── console.cpp
+│   │   │   ├── console.h
+│   │   ├── led/
+│   │   │   ├── led_module.cpp
+│   │   │   ├── led_module.h
+│   │   ├── system/
+│   │   │   ├── system.cpp
+│   │   │   ├── system.h
 │   ├── platform/
 │   │   ├── transport/
 │   │   │   ├── transport.cpp
 │   │   │   ├── transport.h
 │   ├── system/
-│   │   ├── system.cpp
-│   │   ├── system.h
 │   │   ├── console/
-│   │   │   ├── console.cpp
-│   │   │   ├── console.h

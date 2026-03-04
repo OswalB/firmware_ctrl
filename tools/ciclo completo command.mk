@@ -153,3 +153,25 @@ void led_init(void)
         leds[i].update();
     }
     }
+
+    Texto (CLI)
+   ↓
+tokenize()
+   ↓
+classify_tokens()
+   ↓
+evaluate_command()
+   ↓
+validate_semantics()
+   ↓
+eventQueue_push()
+   ↓
+machine_update()
+   ↓
+machine_handleEvent()
+   ↓
+Dominio
+   ↓
+Módulo
+   ↓
+Driver
