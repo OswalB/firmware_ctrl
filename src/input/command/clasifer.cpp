@@ -33,6 +33,16 @@ uint8_t classify_tokens(
             out_tokens[i].type = TOKEN_CMD;
             out_tokens[i].cmd = EVT_GET;
         }
+        else if (strcmp(word, "START") == 0)
+        {
+            out_tokens[i].type = TOKEN_CMD;
+            out_tokens[i].cmd = EVT_START;
+        }
+        else if (strcmp(word, "STOP") == 0)
+        {
+            out_tokens[i].type = TOKEN_CMD;
+            out_tokens[i].cmd = EVT_STOP;
+        }
 
         // DOMAIN
         else if (strcmp(word, "LED") == 0)

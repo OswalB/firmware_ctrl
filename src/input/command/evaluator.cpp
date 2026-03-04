@@ -28,7 +28,7 @@ bool evaluate_command(Token *tokens, int token_count, Event *out)
         case 1:
             return true;
 
-        case 3:
+        case 3: // START LED 0
             if (tokens[1].type != TOKEN_DOMAIN ||
                 tokens[2].type != TOKEN_NUMBER)
                 return false;

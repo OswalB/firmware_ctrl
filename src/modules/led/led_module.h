@@ -34,6 +34,7 @@ namespace led
         }
     };
 
+    bool setDuty(uint8_t id, int32_t persent);
     bool setTime(uint8_t id, int32_t timeMs);
     bool setState(uint8_t id, int32_t state);
 

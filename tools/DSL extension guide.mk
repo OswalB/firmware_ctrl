@@ -26,6 +26,9 @@ Semántica	Validar rangos y coherencia
 Ejecución	Ejecutar acción
 
 🔷 1️⃣ Agregar un NUEVO DOMAIN
+Paso 1b - input/command/classifer
+agregar el token y sus salidas
+
 Paso 1 — domain_types.h
 typedef enum
 {
@@ -74,7 +77,12 @@ typedef enum
     EVT_COUNT
 } EventType;
 
+Paso 1b - input/command/classifer
+agregar el token y sus salidas
+
 Paso 2 — Tabla del lexer  ?????????
+CORE /model/domain_capabilities
+
 {"TOGGLE", EVT_TOGGLE},
 
 Paso 3 — evaluate_command()
@@ -113,6 +121,8 @@ typedef enum
     PARAM_COUNT
 } ParamType;
 
+Paso 1b - input/command/classifer
+agregar el token y sus salidas
 
 Range defined but param not supported
 

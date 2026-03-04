@@ -13,23 +13,20 @@ namespace led
             LedPWM(A1)  // RUN
     };
 
+    bool setDuty(uint8_t id, int32_t persent)
+    {
+        leds[id].set_duty(persent);
+        return true;
+    }
+
     bool setTime(uint8_t id, int32_t timeMs)
     {
-        Console_Print(MSG_LOG,
-                      "[LED MODULE] id=%d time=%ld\n",
-                      id,
-                      timeMs);
-
-        // aquí iría lógica real
+        leds[id].set_time(timeMs);
         return true;
     }
 
     bool setState(uint8_t id, int32_t rawState)
     {
-        Console_Print(MSG_LOG,
-                      "[LED MODULE..] id=%d state=%ld\n",
-                      id,
-                      rawState);
         if (id >= static_cast<uint8_t>(LedId::COUNT))
             return false;
 

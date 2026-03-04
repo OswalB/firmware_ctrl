@@ -31,6 +31,8 @@ static const DomainCapabilities domain_table[] =
          .supported_params_mask =
              (1u << PARAM_SPEED),
          .supported_cmds_mask =
+             (1u << EVT_START) |
+             (1u << EVT_STOP) |
              (1u << EVT_SET) |
              (1u << EVT_GET),
          .param_ranges =
