@@ -10,6 +10,8 @@ static void led_getTime(const Event &evt);
 static void led_setDuty(const Event &evt);
 static void led_setState(const Event &evt);
 static void led_setTime(const Event &evt);
+static void led_start(const Event &evt);
+static void led_stop(const Event &evt);
 
 
 
@@ -19,6 +21,8 @@ static const LedCommandEntry ledCmdTable[] =
         {EVT_SET, PARAM_TIME, led_setTime},
         {EVT_SET, PARAM_STATE, led_setState},
         {EVT_GET, PARAM_TIME, led_getTime},
+        {EVT_START, PARAM_UNKNOW, led_start},
+        {EVT_STOP, PARAM_UNKNOW, led_stop},
 };
 
 void machine_led_handle(const Event &evt)
@@ -72,9 +76,27 @@ static void led_setState(const Event &evt)
     led::setState(evt.id, evt.value);
 }
 
+static void led_start(const Event &evt)
+{
+
+    if (evt.id >= static_cast<uint8_t>(led::LedId::COUNT))
+        return;
+
+    led::start(evt.id);
+}
+
+static void led_stop(const Event &evt)
+{
+
+    if (evt.id >= static_cast<uint8_t>(led::LedId::COUNT))
+        return;
+
+    led::stop(evt.id);
+}
+
 static void led_getTime(const Event &evt)
 {
     Console_Print(MSG_LOG,
-                  "LED %d -> get TIME\n",
+                  "No implementado: LED %d -> get TIME\n",
                   evt.id);
 }

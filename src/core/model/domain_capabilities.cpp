@@ -10,12 +10,15 @@
 
 static const DomainCapabilities domain_table[] =
     {
+        // DOMMAIN LED ***
         {.domain = DOMAIN_LED,
          .supported_params_mask =
              (1u << PARAM_STATE) |
              (1u << PARAM_DUTY) |
              (1u << PARAM_TIME),
          .supported_cmds_mask =
+             (1u << EVT_START) |
+             (1u << EVT_STOP) |
              (1u << EVT_SET) |
              (1u << EVT_GET),
          .param_ranges =
@@ -27,6 +30,7 @@ static const DomainCapabilities domain_table[] =
                  [PARAM_TIME] = {.min = 0, .max = 60000, .has_range = true}},
 
          .id_range = {.min = 0, .max = 2, .has_range = true}},
+        // DOMMAIN MOTOR ***
         {.domain = DOMAIN_MOTOR,
          .supported_params_mask =
              (1u << PARAM_SPEED),
@@ -43,6 +47,7 @@ static const DomainCapabilities domain_table[] =
                  [PARAM_DUTY] = PARAM_UNUSED,
                  [PARAM_TIME] = PARAM_UNUSED},
          .id_range = {.min = 0, .max = 3, .has_range = true}},
+        // DOMMAIN SENSOR ***
         {.domain = DOMAIN_SENSOR,
          .supported_params_mask =
              (1u << PARAM_STATE),

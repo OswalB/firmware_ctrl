@@ -37,6 +37,8 @@ namespace led
     bool setDuty(uint8_t id, int32_t persent);
     bool setTime(uint8_t id, int32_t timeMs);
     bool setState(uint8_t id, int32_t state);
+    bool start(uint8_t id);
+    bool stop(uint8_t id);
 
     void led_init(void);
     void led_update(void);

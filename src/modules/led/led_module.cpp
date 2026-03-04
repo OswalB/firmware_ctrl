@@ -2,9 +2,6 @@
 #include "modules/console/console.h"
 #include "drivers/led_pwm/led_pwm.h"
 
-// static LedPWM ledError(A0);
-// static LedPWM ledRun(A1);
-
 namespace led
 {
     static LedPWM leds[(uint8_t)LedId::COUNT] =
@@ -37,21 +34,33 @@ namespace led
         switch (state)
         {
         case StatusLedState::LED_OFF:
-            leds[id].start_led(0, 0);
+            leds[id].run_led(0, 0);
             break;
 
         case StatusLedState::LED_WARNING:
-            leds[id].start_led(1000, 50);
+            leds[id].run_led(1000, 50);
             break;
 
         case StatusLedState::LED_ERROR:
-            leds[id].start_led(200, 25);
+            leds[id].run_led(200, 25);
             break;
 
         default:
             return false;
         }
 
+        return true;
+    }
+
+    bool start(uint8_t id)
+    {
+        leds[id].start_led();
+        return true;
+    }
+
+    bool stop(uint8_t id)
+    {
+        leds[id].run_led(0,0);
         return true;
     }
 

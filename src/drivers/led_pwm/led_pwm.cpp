@@ -20,7 +20,13 @@ void LedPWM::set_duty(uint8_t value)
   apply();
 }
 
-void LedPWM::start_led(uint32_t periodMs, uint8_t dutyPercent)
+void LedPWM::start_led()
+{
+  _isRunning = true;
+  apply();
+}
+
+void LedPWM::run_led(uint32_t periodMs, uint8_t dutyPercent)
 {
   _setTime = periodMs;
   _setDuty = dutyPercent;
@@ -71,5 +77,5 @@ void LedPWM::apply()
 {
   // Transport_Send("aply %s",_isRunning? "ON" : "OFF");
   if (_isRunning)
-    start_led(_setTime, _setDuty);
+    run_led(_setTime, _setDuty);
 }

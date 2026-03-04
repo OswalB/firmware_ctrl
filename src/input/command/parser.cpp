@@ -62,7 +62,7 @@ bool parser_process_tokens(Token *typed, int token_count)
         return false;
     }
 
-    Console_Print(MSG_LOG, "Event built");
+    Console_Print(MSG_LOG, "Event built. cmd=%d",evt.type);
 
     // --- SEMÁNTICA
     Response response = validate_semantics(&evt);

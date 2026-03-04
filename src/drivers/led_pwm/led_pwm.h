@@ -10,7 +10,8 @@ public:
 
   void set_time(uint32_t value);
   void set_duty(uint8_t value);
-  void start_led(uint32_t periodMs, uint8_t dutyPercent);
+  void run_led(uint32_t periodMs, uint8_t dutyPercent);
+  void start_led();
 
   void update();
 
