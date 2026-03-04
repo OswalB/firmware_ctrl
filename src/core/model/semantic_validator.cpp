@@ -18,7 +18,7 @@ Response validate_semantics(Event *ev)
 
     // 1️⃣ Validar comando permitido
     if (!(caps->supported_cmds_mask & (1u << ev->type)))
-        return {RESP_ERR_COMMAND, "Command error"};
+        return {RESP_ERR_COMMAND, "Command error sem"};
 
     // 2️⃣ Validar parámetro (si existe)
     if (ev->param < PARAM_COUNT)

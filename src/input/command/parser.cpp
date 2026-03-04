@@ -68,10 +68,10 @@ bool parser_process_tokens(Token *typed, int token_count)
     Response response = validate_semantics(&evt);
     if (response.type != RESP_OK)
     {
-        Console_Print(MSG_ERR, "Err %s", response.text);
+        Console_Print(MSG_ERR, "E %s", response.text);
         return false;
     }
-
+    Console_Print(MSG_LOG, "Semantics ok");
     // --- DISPATCH
     eventQueue_push(evt);
 

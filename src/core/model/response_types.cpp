@@ -11,7 +11,7 @@ static const ResponseMap resp_map[] =
     {
         {RESP_ERR_UNKNOW, "Unknown error"},
         {RESP_OK, "OK"},
-        {RESP_ERR_COMMAND, "Command error"},
+        {RESP_ERR_COMMAND, "Command error rsp"},
         {RESP_FAULT, "Fault"},
         {RESP_INFO, "Info"},
         {RESP_ERROR, "Error"},
