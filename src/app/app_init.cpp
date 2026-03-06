@@ -5,7 +5,8 @@
 // #include "modules/motor/motor.h"
 #include "modules/console/console.h"
 #include "modules/system/system.h"
-#include "modules/persistence/persistence .h"
+#include "modules/persistence/persistence.h"
+#include "lib/crc32/crc32.h"
 
 
 void app_init()
@@ -19,6 +20,15 @@ void app_init()
     serial_writeln("=== Firmaware V1.005 ===");
 
     persistence_init();
+
+//---------------------------------------
+
+
+
+
+//---------------------------------------
+
+    
 
     machine_init();
     system_init();
