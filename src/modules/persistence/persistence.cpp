@@ -10,9 +10,9 @@
 //---- FORWARDS
 //-----------------------------------------
 
-bool persistence_Validate(const ConfigSlot *slot);
-bool persistence_Load(ConfigSlot *out);
-
+bool persistence_validate(const ConfigSlot *slot);
+bool persistence_load(MachineConfig *out);
+void persistence_save(ConfigSlot *slot);
 
 //------------------------------------------
 
@@ -20,8 +20,8 @@ void persistence_init(void)
 {
     Console_Print(MSG_DBG, "EEPROM init:");
     MachineConfig cfg;
-    
-    if (persistence_Load(&cfg))
+
+    if (persistence_load(&cfg))
     {
         Console_Print(MSG_LOG, "Using stored configuration");
     }
@@ -45,107 +45,73 @@ void persistence_save(const MachineConfig *config)
     slot.header.magic = CONFIG_MAGIC;
     slot.header.version = CONFIG_VERSION;
     slot.header.size = sizeof(MachineConfig);
+    slot.header.counter = 0;
 
     slot.config = *config;
 
     slot.crc = crc32_compute((uint8_t *)&slot.config, sizeof(MachineConfig));
 
-    eeprom_write_bytes(SLOT_A_ADDR, (uint8_t *)&slot, sizeof(ConfigSlot));
+    persistence_save(&slot);
 
     Console_Print(MSG_LOG, "Config saved to EEPROM");
 }
 
-// BORRAARRRRRRRR    ?????????
-
-bool BORRARpersistence_load(MachineConfig *config)
-{
-    ConfigSlot slot;
-
-    eeprom_read_bytes(SLOT_A_ADDR, (uint8_t *)&slot, sizeof(ConfigSlot));
-
-    if (slot.header.magic != CONFIG_MAGIC)
-    {
-        Console_Print(MSG_ERR, "Invalid magic");
-        return false;
-    }
-
-    if (slot.header.size != sizeof(MachineConfig))
-    {
-        Console_Print(MSG_ERR, "Invalid config size");
-        return false;
-    }
-
-    uint32_t crc = crc32_compute((uint8_t *)&slot.config, sizeof(MachineConfig));
-
-    if (crc != slot.crc)
-    {
-        Console_Print(MSG_ERR, "CRC mismatch");
-        return false;
-    }
-
-    *config = slot.config;
-
-    Console_Print(MSG_LOG, "Config loaded OK");
-
-    return true;
-}
-
-bool persistence_Load(ConfigSlot *out)
+bool persistence_load(MachineConfig *out)
 {
     ConfigSlot a;
     ConfigSlot b;
     eeprom_read_bytes(SLOT_A_ADDR, (uint8_t *)&a, sizeof(ConfigSlot));
     eeprom_read_bytes(SLOT_B_ADDR, (uint8_t *)&b, sizeof(ConfigSlot));
 
-    bool validA = persistence_Validate(&a);
-    bool validB = persistence_Validate(&b);
+    bool validA = persistence_validate(&a);
+    bool validB = persistence_validate(&b);
 
     if (validA && validB)
     {
         if (a.header.counter >= b.header.counter)
-            *out = a;
+            *out = a.config;
         else
-            *out = b;
+            *out = b.config;
 
         return true;
     }
 
     if (validA)
     {
-        *out = a;
+        *out = a.config;
         return true;
     }
 
     if (validB)
     {
-        *out = b;
+        *out = b.config;
         return true;
     }
 
     return false;
 }
 
-void persistence_Save(ConfigSlot *slot)
+void persistence_save(ConfigSlot *slot)
 {
     ConfigSlot a;
     ConfigSlot b;
 
-    eeprom_read_bytes(SLOT_A_ADDR, (uint8_t*)&a, sizeof(ConfigSlot));
-    eeprom_read_bytes(SLOT_B_ADDR, (uint8_t*)&b, sizeof(ConfigSlot));
+    eeprom_read_bytes(SLOT_A_ADDR, (uint8_t *)&a, sizeof(ConfigSlot));
+    eeprom_read_bytes(SLOT_B_ADDR, (uint8_t *)&b, sizeof(ConfigSlot));
 
-    bool validA = persistence_Validate(&a);
-    bool validB = persistence_Validate(&b);
+    bool validA = persistence_validate(&a);
+    bool validB = persistence_validate(&b);
 
     uint16_t addr;
 
-    if(validA && validB)
+    if (validA && validB)
     {
-        if(a.header.counter >= b.header.counter)
+        if (a.header.counter >= b.header.counter)
             addr = SLOT_B_ADDR;
         else
             addr = SLOT_A_ADDR;
     }
-    else if(validA)
+    else if (validA)
     {
         addr = SLOT_B_ADDR;
     }
@@ -154,27 +120,32 @@ void persistence_Save(ConfigSlot *slot)
         addr = SLOT_A_ADDR;
     }
 
-    eeprom_write_bytes(addr, (uint8_t*)slot, sizeof(ConfigSlot));
+    eeprom_write_bytes(addr, (uint8_t *)slot, sizeof(ConfigSlot));
 }
 
-bool persistence_Validate(const ConfigSlot *slot)
+bool persistence_validate(const ConfigSlot *slot)
 {
+    if (slot->header.size != sizeof(MachineConfig))
+    {
+        Console_Print(MSG_DBG, "Invalid config size");
+        return false;
+    }
+
     if (slot->header.magic != CONFIG_MAGIC)
     {
         Console_Print(MSG_DBG, "Invalid magic");
         return false;
     }
 
-    if (slot->header.version !=  CONFIG_VERSION)
+    if (slot->header.version != CONFIG_VERSION)
     {
         Console_Print(MSG_DBG, "Invalid version");
         return false;
     }
 
-    uint32_t crc_calc =  crc32_compute(
-        (const uint8_t*)&slot->config,
-        sizeof(MachineConfig)
-    );
+    uint32_t crc_calc = crc32_compute(
+        (const uint8_t *)&slot->config,
+        sizeof(MachineConfig));
 
     if (crc_calc != slot->crc)
     {
@@ -184,8 +155,6 @@ bool persistence_Validate(const ConfigSlot *slot)
 
     return true;
 }
-
-
 
 //-----------------------------------------
 //---- TESTS VERIFY
