@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 
+#define CONFIG_MAGIC 0x43464731  // "CFG1"
+#define CONFIG_VERSION 1
+
 typedef struct
 {
     uint8_t  motor_max_speed;
