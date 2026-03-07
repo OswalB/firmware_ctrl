@@ -28,9 +28,7 @@ void persistence_init(void)
     {
         Console_Print(MSG_LOG, "Loading defaults");
 
-        cfg.motor_max_speed = 120;
-        cfg.motor_acceleration = 500;
-        cfg.sensor_enabled = 1;
+        machine_config_set_defaults(&cfg);
 
         persistence_save(&cfg);
     }
