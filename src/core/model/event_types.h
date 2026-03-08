@@ -14,6 +14,7 @@ typedef enum
     EVT_STOP,
     EVT_ERROR,
     EVT_RESET,
+    EVT_SAVE,
     //Eventos de error
     EV_PARSE_UNKNOWN,
     EV_PARSE_INVALID_PARAM,
@@ -21,7 +22,7 @@ typedef enum
     EV_TIMEOUT,
     EV_HW_FAULT,
     EV_OPERATION_DONE,
-    EV_TYPE_REQUEST,
+    
     EVT_COUNT
 
 } EventType;
@@ -36,4 +37,5 @@ typedef struct
     uint8_t id;        // Instancia Quién lo generó / a quién aplica
     ParamType param;   // SPEED, POSITION, ...
     int32_t value;     // Dato asociado
+    char val_string[17]; //cadena de texto max 16
 } Event;

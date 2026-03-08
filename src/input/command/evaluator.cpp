@@ -6,9 +6,7 @@
 #include "core/model/token_types.h"
 #include "input/command/clasifer.h"
 
-//#include "input/command/gramar.h"
-
-
+// #include "input/command/gramar.h"
 
 bool evaluate_command(Token *tokens, int token_count, Event *out)
 {
@@ -25,19 +23,19 @@ bool evaluate_command(Token *tokens, int token_count, Event *out)
 
     switch (token_count)
     {
-        case 1:
-            return true;
+    case 1:
+        return true;
 
-        case 3: // START LED 0
-            if (tokens[1].type != TOKEN_DOMAIN ||
-                tokens[2].type != TOKEN_NUMBER)
-                return false;
+    case 3: // START LED 0
+        if (tokens[1].type != TOKEN_DOMAIN ||
+            tokens[2].type != TOKEN_NUMBER)
+            return false;
 
-            out->domain = tokens[1].domain;
-            out->id     = tokens[2].number;
-            return true;
+        out->domain = tokens[1].domain;
+        out->id = tokens[2].number;
+        return true;
 
-        case 4:
+        /*case 4:
             if (tokens[1].type != TOKEN_DOMAIN ||
                 tokens[2].type != TOKEN_NUMBER ||
                 tokens[3].type != TOKEN_NUMBER)
@@ -46,22 +44,39 @@ bool evaluate_command(Token *tokens, int token_count, Event *out)
             out->domain = tokens[1].domain;
             out->id     = tokens[2].number;
             out->value  = tokens[3].number;
-            return true;
+            return true;*/
 
-        case 5:
-            if (tokens[1].type != TOKEN_DOMAIN ||
-                tokens[2].type != TOKEN_NUMBER ||
-                tokens[3].type != TOKEN_PARAM  ||
-                tokens[4].type != TOKEN_NUMBER)
-                return false;
-
-            out->domain = tokens[1].domain;
-            out->id     = tokens[2].number;
-            out->param  = tokens[3].param;
-            out->value  = tokens[4].number;
-            return true;
-
-        default:
+    case 4:
+        if (tokens[1].type != TOKEN_DOMAIN ||
+            tokens[2].type != TOKEN_NUMBER ||
+            (tokens[3].type != TOKEN_NUMBER &&
+             tokens[3].type != TOKEN_STRING))
             return false;
+
+        out->domain = tokens[1].domain;
+        out->id = tokens[2].number;
+
+        if (tokens[3].type == TOKEN_NUMBER)
+            out->value = tokens[3].number;
+        else
+            strncpy(out->val_string, tokens[3].val_string, sizeof(out->val_string));
+
+        return true;
+
+    case 5:
+        if (tokens[1].type != TOKEN_DOMAIN ||
+            tokens[2].type != TOKEN_NUMBER ||
+            tokens[3].type != TOKEN_PARAM ||
+            tokens[4].type != TOKEN_NUMBER)
+            return false;
+
+        out->domain = tokens[1].domain;
+        out->id = tokens[2].number;
+        out->param = tokens[3].param;
+        out->value = tokens[4].number;
+        return true;
+
+    default:
+        return false;
     }
 }

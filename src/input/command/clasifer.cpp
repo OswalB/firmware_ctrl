@@ -43,6 +43,11 @@ uint8_t classify_tokens(
             out_tokens[i].type = TOKEN_CMD;
             out_tokens[i].cmd = EVT_STOP;
         }
+        else if (strcmp(word, "SAVE") == 0)
+        {
+            out_tokens[i].type = TOKEN_CMD;
+            out_tokens[i].cmd = EVT_SAVE;
+        }
 
         // DOMAIN
         else if (strcmp(word, "LED") == 0)
@@ -59,6 +64,11 @@ uint8_t classify_tokens(
         {
             out_tokens[i].type = TOKEN_DOMAIN;
             out_tokens[i].domain = DOMAIN_SENSOR;
+        }
+        else if (strcmp(word, "CUSTOM") == 0)
+        {
+            out_tokens[i].type = TOKEN_DOMAIN;
+            out_tokens[i].domain = DOMAIN_CUSTOM;
         }
 
         // PARAM
@@ -88,6 +98,13 @@ uint8_t classify_tokens(
         {
             out_tokens[i].type = TOKEN_NUMBER;
             out_tokens[i].number = atoi(word);
+        }
+        else if(!utils_is_numeric(word))
+        {
+            out_tokens[i].type = TOKEN_STRING;
+            strncpy(out_tokens[i].val_string, word, sizeof(out_tokens[i].val_string) - 1);
+            out_tokens[i].val_string[sizeof(out_tokens[i].val_string) - 1] = '\0';
+
         }
 
         // UNKNOWN

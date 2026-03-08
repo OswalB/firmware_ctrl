@@ -10,6 +10,7 @@ const char* const EventType_str[EVT_COUNT] =
     "EVT_STOP",
     "EVT_ERROR",
     "EVT_RESET",
+    "EVT_SAVE",
     //Eventos de error
     "EV_PARSE_UNKNOWN",
     "EV_PARSE_INVALID_PARAM",
@@ -17,6 +18,6 @@ const char* const EventType_str[EVT_COUNT] =
     "EV_TIMEOUT",
     "EV_HW_FAULT",
     "EV_OPERATION_DONE",
-    "EV_TYPE_REQUEST"
+    
 
 };

@@ -29,7 +29,7 @@ Ejecución	Ejecutar acción
 Paso 1b - input/command/classifer
 agregar el token y sus salidas
 
-Paso 1 — domain_types.h
+Paso 1 — core/model/domain_types.h
 typedef enum
 {
     DOMAIN_LED = 0,
@@ -42,7 +42,7 @@ typedef enum
 
 Paso 2 — Tabla del lexer
 
-Agregar en domain_table:
+Agregar en domain_table input/command/classifer:
 
 {"MOTOR", DOMAIN_MOTOR},
 
@@ -53,9 +53,7 @@ Paso 3 — validate_semantics()
 Definir límites:
 
 case DOMAIN_MOTOR:
-    if (evt->id >= MAX_MOTORS)
-        return RESP_ERR_ID;
-    break;
+    
 
 Nunca validar rangos en el parser.
 
@@ -80,7 +78,7 @@ typedef enum
 Paso 1b - input/command/classifer
 agregar el token y sus salidas
 
-Paso 2 — Tabla del lexer  ?????????
+Paso 2 — Tabla del lexer  
 CORE /model/domain_capabilities
 
 {"TOGGLE", EVT_TOGGLE},

@@ -12,7 +12,8 @@ typedef enum
     TOKEN_CMD,
     TOKEN_DOMAIN,
     TOKEN_PARAM,
-    TOKEN_NUMBER
+    TOKEN_NUMBER,
+    TOKEN_STRING
 } TokenType;
 
 typedef struct
@@ -25,6 +26,7 @@ typedef struct
         DomainType domain;
         ParamType  param;
         int32_t    number;
+        char       val_string[17]; 
     };
 
 } Token;

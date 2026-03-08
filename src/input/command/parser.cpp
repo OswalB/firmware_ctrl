@@ -76,12 +76,13 @@ bool parser_process_tokens(Token *typed, int token_count)
     eventQueue_push(evt);
 
     Console_Print(MSG_LOG,
-                  "OK evt pushed event=%s dom=%d id=%d param=%d value=%ld",
+                  "OK evt pushed event=%s dom=%d id=%d param=%d value=%ld txt=%s",
                   enum_toString(evt.type, EventType_str, EVT_COUNT),
                   evt.domain,
                   evt.id,
                   evt.param,
-                  evt.value);
+                  evt.value,
+                  evt.val_string);
 
     return true;
 }

@@ -7,6 +7,7 @@
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 static void led_getTime(const Event &evt);
+static void led_saveTime(const Event &evt);
 static void led_setDuty(const Event &evt);
 static void led_setState(const Event &evt);
 static void led_setTime(const Event &evt);
@@ -17,6 +18,7 @@ static void led_stop(const Event &evt);
 
 static const LedCommandEntry ledCmdTable[] =
     {
+        {EVT_SAVE,PARAM_TIME, led_saveTime},
         {EVT_SET, PARAM_DUTY, led_setDuty},
         {EVT_SET, PARAM_TIME, led_setTime},
         {EVT_SET, PARAM_STATE, led_setState},
@@ -55,6 +57,16 @@ static void led_setDuty(const Event &evt)
         return;
     }
     led::setDuty(evt.id, evt.value);
+}
+
+static void led_saveTime(const Event &evt)
+{
+    if (!led::saveTime(evt.id, evt.value))
+    {
+        Console_Print(MSG_ERR, "LED saveTime failed\n");
+        return;
+    }
+    led::setTime(evt.id, evt.value);
 }
 
 static void led_setTime(const Event &evt)

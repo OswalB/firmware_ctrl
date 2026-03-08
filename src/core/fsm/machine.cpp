@@ -4,6 +4,7 @@
 #include "core/event/event_queue.h"
 #include "modules/console/console.h"
 #include "core/domains/domain_led.h"
+#include "core/domains/domain_custom.h"
 // #include "core/types/event_types.h"
 // #include "modules/led/led.h"
 // #include "drivers/led_pwm/led_pwm.h"
@@ -165,6 +166,11 @@ void machine_update(void)
         case DOMAIN_MOTOR:
             // machine_motor_handle(evt);
             Console_Print(MSG_DBG, "routing MOTOR");
+            break;
+
+        case DOMAIN_CUSTOM:
+            machine_custom_handle(evt);
+            Console_Print(MSG_DBG, "routing CUSTOM");
             break;
 
         default:

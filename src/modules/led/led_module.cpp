@@ -22,6 +22,13 @@ namespace led
         return true;
     }
 
+    bool saveTime(uint8_t id, int32_t timeMs)
+    {
+        //leds[id].set_time(timeMs);
+        Console_Print(MSG_DBG,"save no implementado");
+        return true;
+    }
+
     bool setState(uint8_t id, int32_t rawState)
     {
         if (id >= static_cast<uint8_t>(LedId::COUNT))

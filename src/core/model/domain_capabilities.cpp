@@ -20,7 +20,8 @@ static const DomainCapabilities domain_table[] =
              (1u << EVT_START) |
              (1u << EVT_STOP) |
              (1u << EVT_SET) |
-             (1u << EVT_GET),
+             (1u << EVT_GET) |
+             (1u << EVT_SAVE),
          .param_ranges =
              {
                  [PARAM_UNKNOW] = PARAM_UNUSED,
@@ -58,7 +59,19 @@ static const DomainCapabilities domain_table[] =
              {0, 0, false},
              [PARAM_DUTY] = PARAM_UNUSED,
              [PARAM_TIME] = PARAM_UNUSED},
-         {0, 10, true}}};
+         {0, 10, true}},
+         {
+            .domain = DOMAIN_CUSTOM,
+            .supported_params_mask =0,
+            .supported_cmds_mask =
+            (1u << EVT_SAVE) | 
+            (1u << EVT_GET),
+            .param_ranges={0,0,false},
+            .id_range = {.min = 0, .max = 5, .has_range = true}
+             
+            
+         },
+};
 
 const DomainCapabilities *
 get_domain_capabilities(DomainType domain)

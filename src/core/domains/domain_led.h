@@ -2,7 +2,6 @@
 
 #include "core/model/event_types.h"
 
-//void machine_led_handle(const Event *evt);
 void machine_led_handle(const Event& evt);
 typedef void (*LedHandler)(const Event& evt);
 
