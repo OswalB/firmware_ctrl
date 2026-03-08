@@ -8,3 +8,13 @@
 void persistence_init(void);
 bool persistence_load(MachineConfig *out);
 void persistence_save(const MachineConfig *config);
+
+// Desde los modulos:
+
+const MachineConfig* machine_config_get(void);
+
+MachineConfig* machine_config_edit(void);
+
+void machine_config_mark_dirty(void);
+
+bool machine_config_save(void);
