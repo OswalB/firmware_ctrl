@@ -6,6 +6,9 @@
 #include "lib/crc32/crc32.h"
 #include "persistence_utils.h"
 
+static MachineConfig current_config;
+static bool config_dirty = false;
+
 //-----------------------------------------
 //---- FORWARDS
 //-----------------------------------------
@@ -18,9 +21,9 @@ bool persistence_load(MachineConfig *out);
 void persistence_init(void)
 {
     Console_Print(MSG_DBG, "EEPROM init:");
-    MachineConfig cfg;
+    MachineConfig *cfg = machine_config_mutable();
 
-    if (persistence_load(&cfg))
+    if (persistence_load(cfg))
     {
         Console_Print(MSG_LOG, "Using stored configuration");
     }
@@ -28,9 +31,9 @@ void persistence_init(void)
     {
         Console_Print(MSG_LOG, "Loading defaults");
 
-        machine_config_set_defaults(&cfg);
+        machine_config_set_defaults(cfg);
 
-        persistence_save(&cfg);
+        persistence_save(cfg);
     }
     Persistence_PrintLayout(sizeof(ConfigSlot));
 }
@@ -161,4 +164,34 @@ static bool persistence_validate(const ConfigSlot *slot)
     return true;
 }
 
+MachineConfig *machine_config_edit(void)
+{
+    return &current_config;
+}
 
+void machine_config_mark_dirty(void)
+{
+    config_dirty = true;
+}
+
+MachineConfig* machine_config_mutable(void)
+{
+    return &current_config;
+}
+
+const MachineConfig* machine_config_get(void)
+{
+    return &current_config;
+}
+
+bool machine_config_save(void)
+{
+    if (!config_dirty)
+        return true;
+
+    persistence_save(&current_config);
+
+    config_dirty = false;
+
+    return true;
+}

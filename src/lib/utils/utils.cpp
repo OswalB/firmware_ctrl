@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdbool.h>
+#include <Arduino.h>
 
 /*==================================================
                  STRINGS
@@ -30,6 +31,19 @@ void utils_to_uppercase(char *str)
         *str = toupper((unsigned char)*str);
         str++;
     }
+}
+
+//utils_strcopy_safe(cfg->customer[0], "Abc", sizeof(cfg->customer[0]));
+void utils_strcopy_safe(char *dst, const char *src, size_t size)
+{
+    if (size == 0) return;
+
+    size_t i;
+
+    for (i = 0; i < size - 1 && src[i] != '\0'; i++)
+        dst[i] = src[i];
+
+    dst[i] = '\0';
 }
 
 /*==================================================

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Arduino.h>
 #include <stdbool.h>
 
 /*==================================================
@@ -7,6 +8,7 @@
 ====================================================*/
 bool utils_is_numeric(const char *str);
 void utils_to_uppercase(char *str);
+void utils_strcopy_safe(char *dst, const char *src, size_t size);
 
 /*==================================================
                  CONVERT

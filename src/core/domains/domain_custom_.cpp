@@ -1,7 +1,10 @@
 #include <stddef.h>
+#include <stdint.h>  //indispensable para manejar tipos
 
+#include "lib/utils/utils.h"
 #include "domain_custom.h"
 #include "modules/console/console.h"
+#include "modules/persistence/persistence.h"
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -36,4 +39,10 @@ void machine_custom_handle(const Event &evt)
 void custom_save(const Event &evt)
 {
     Console_Print(MSG_DBG, "aqui va la grabadora eeprom");
+    MachineConfig *cfg = machine_config_edit();
+
+    cfg->Led1_time = 54200;
+    utils_strcopy_safe(cfg->customer[0], "Owen", sizeof(cfg->customer[0]));
+    machine_config_mark_dirty();
+    machine_config_save();
 }

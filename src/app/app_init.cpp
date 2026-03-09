@@ -21,6 +21,10 @@ void app_init()
 
     persistence_init();
 
+    //test de eeprom to cache
+    const MachineConfig *cfg = machine_config_get();
+    Console_Print(MSG_DBG,"Custom [0]: %s led: %ld", cfg->customer[0], cfg->Led1_time);
+
 //---------------------------------------
 
 

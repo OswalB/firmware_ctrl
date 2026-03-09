@@ -11,6 +11,8 @@ void persistence_save(const MachineConfig *config);
 
 // Desde los modulos:
 
+MachineConfig* machine_config_mutable(void);
+
 const MachineConfig* machine_config_get(void);
 
 MachineConfig* machine_config_edit(void);
