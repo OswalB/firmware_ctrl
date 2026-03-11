@@ -5,6 +5,7 @@
 #include "modules/console/console.h"
 #include "core/domains/domain_led.h"
 #include "core/domains/domain_custom.h"
+#include "lib/utils/interpreter.h"
 // #include "core/types/event_types.h"
 // #include "modules/led/led.h"
 // #include "drivers/led_pwm/led_pwm.h"
@@ -13,7 +14,7 @@ static MachineState fsm_state = MS_IDLE;
 static MachineState g_state;
 
 void fsm_push(ResponseType type, const char *text);
-static void machine_handleEvent(const Event &evt);
+static void machine_handleEvent(Event &evt);
 
 #define FSM_QUEUE_SIZE 8
 
@@ -70,7 +71,6 @@ void fsm_dispatchEvent(EventType ev)
     }
 }
 
-
 void fsm_push(ResponseType type, const char *text)
 {
     uint8_t next = (queueHead + 1) % FSM_QUEUE_SIZE;
@@ -110,49 +110,65 @@ void machine_update(void)
     }
 }
 
- void machine_handleEvent(const Event &evt)
+void machine_handleEvent(Event &evt)
 {
-    Console_Print(MSG_DBG,"Tecla ev=%d",evt.type);
-    // 🔴 1. Eventos globales
+    Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
+    Console_Print(MSG_LOG,"[key delete] is # %d",enum_from_string(key_table_enum,key_table_count,"key delete"));
+    //  🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
         g_state = MS_ERROR;
         return;
     }
 
-    switch (evt.type)
+    if (evt.type == EVT_KEY_PRESS)
     {
-    case EVT_KEY_PRESS:
-        /* code */
-        break;
-    
-    default:
-    
-        break;
+        switch (evt.value)
+        {
+        case KEY_UP:
+            Console_Print(MSG_LOG, "tec arriba");
+            evt.type = EVT_SET;
+            evt.domain = DOMAIN_LED;
+            evt.id = 0;
+            evt.param = PARAM_STATE;
+            evt.value = 1;
+            break;
+        case KEY_DOWN:
+            Console_Print(MSG_LOG, "tec abajo");
+            evt.type = EVT_SET;
+            evt.domain = DOMAIN_LED;
+            evt.id = 0;
+            evt.param = PARAM_STATE;
+            evt.value = 0;
+            break;
+        default:
+
+            break;
+        }
     }
 
     // 🔵 2. Delegación por dominio
     switch (evt.domain)
     {
-        case DOMAIN_LED:
-            machine_led_handle(evt);
-            Console_Print(MSG_DBG, "routing LED");
-            break;
+    case DOMAIN_LED:
+        machine_led_handle(evt);
+        Console_Print(MSG_DBG, "routing LED");
+        break;
 
-        case DOMAIN_MOTOR:
-            // machine_motor_handle(evt);
-            Console_Print(MSG_DBG, "routing MOTOR");
-            break;
+    case DOMAIN_MOTOR:
+        // machine_motor_handle(evt);
+        Console_Print(MSG_DBG, "routing MOTOR");
+        break;
 
-        case DOMAIN_CUSTOM:
-            machine_custom_handle(evt);
-            Console_Print(MSG_DBG, "routing CUSTOM");
-            break;
+    case DOMAIN_CUSTOM:
+        machine_custom_handle(evt);
+        Console_Print(MSG_DBG, "routing CUSTOM");
+        break;
 
-        default:
-            Console_Print(MSG_ERR,
-                "Unknown domain %d\n",
-                evt.domain);
-            break;
+    default:
+        Console_Print(MSG_ERR,
+                      "Unknown domain %d\n",
+                      evt.domain);
+        break;
     }
 }

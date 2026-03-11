@@ -2,6 +2,7 @@
 
 #include "core/model/event_types.h"
 #include "core/model/response_types.h"
+#include "core/model/key_types.h"
 
 typedef enum
 {

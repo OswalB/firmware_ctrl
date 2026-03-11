@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stddef.h>
+#include "lib/utils/interpreter.h"
+
 typedef enum
 {
     KEY_NONE = 0,
@@ -23,3 +26,6 @@ typedef enum
     KEY_F11,
     KEY_F12
 } KeyCode;
+
+extern const EnumEntry key_table_enum[];
+extern const size_t key_table_count;
