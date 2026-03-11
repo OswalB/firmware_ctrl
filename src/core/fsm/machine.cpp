@@ -70,42 +70,6 @@ void fsm_dispatchEvent(EventType ev)
     }
 }
 
-// Handler
-/*
-void fsm_handleCommand(const char *cmd)
-{
-    if (fsm_state == MS_ERROR)
-    {
-        fsm_push(RESP_FAULT, "system in fault state");
-        return;
-    }
-
-    if (strcmp(cmd, "start") == 0)
-    {
-        fsm_state = MS_BUSY;
-        fsm_push(RESP_INFO, "processing...");
-    }
-    else if (strcmp(cmd, "ok") == 0)
-    {
-        fsm_state = MS_IDLE;
-        fsm_push(RESP_OK, "");
-    }
-    else if (strcmp(cmd, "fail") == 0)
-    {
-        fsm_state = MS_IDLE;
-        fsm_push(RESP_ERROR, "operation failed");
-    }
-    else if (strcmp(cmd, "timeout") == 0)
-    {
-        fsm_state = MS_ERROR;
-        fsm_push(RESP_FAULT, "timeout");
-    }
-    else
-    {
-        fsm_push(RESP_ERROR, "unknown command++");
-    }
-}
-*/
 
 void fsm_push(ResponseType type, const char *text)
 {
@@ -148,11 +112,23 @@ void machine_update(void)
 
  void machine_handleEvent(const Event &evt)
 {
+    Console_Print(MSG_DBG,"Tecla ev=%d",evt.type);
     // 🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
         g_state = MS_ERROR;
         return;
+    }
+
+    switch (evt.type)
+    {
+    case EVT_KEY_PRESS:
+        /* code */
+        break;
+    
+    default:
+    
+        break;
     }
 
     // 🔵 2. Delegación por dominio

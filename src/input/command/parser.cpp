@@ -16,7 +16,7 @@ static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH]);
 // --------------------------------------------
 // Parser text (cli)
 // --------------------------------------------
-    void parser_parse_line(const char *line)
+void parser_parse_line(const char *line)
 {
     char tokens[MAX_TOKENS][MAX_TOKEN_LENGTH];
     int token_count = tokenize(line, tokens);
@@ -62,7 +62,7 @@ bool parser_process_tokens(Token *typed, int token_count)
         return false;
     }
 
-    Console_Print(MSG_LOG, "Event built. cmd=%d",evt.type);
+    Console_Print(MSG_LOG, "Event built. cmd=%d", evt.type);
 
     // --- SEMÁNTICA
     Response response = validate_semantics(&evt);
@@ -87,18 +87,17 @@ bool parser_process_tokens(Token *typed, int token_count)
     return true;
 }
 
-
 // --------------------------------------------
 // Tokenizador simple
 // --------------------------------------------
 static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH])
 {
     int count = 0;
-
     const char *ptr = line;
 
     while (*ptr != '\0' && count < MAX_TOKENS)
     {
+        // Saltar espacios
         while (*ptr == ' ')
             ptr++;
 
@@ -106,9 +105,27 @@ static int tokenize(const char *line, char tokens[][MAX_TOKEN_LENGTH])
             break;
 
         int len = 0;
-        while (*ptr != ' ' && *ptr != '\0' && len < MAX_TOKEN_LENGTH - 1)
+
+        // --- Caso 1: texto entre comillas ---
+        if (*ptr == '"')
         {
-            tokens[count][len++] = *ptr++;
+            ptr++; // saltar comilla inicial
+
+            while (*ptr != '"' && *ptr != '\0' && len < MAX_TOKEN_LENGTH - 1)
+            {
+                tokens[count][len++] = *ptr++;
+            }
+
+            if (*ptr == '"')
+                ptr++; // saltar comilla final
+        }
+        else
+        {
+            // --- Caso 2: token normal ---
+            while (*ptr != ' ' && *ptr != '\0' && len < MAX_TOKEN_LENGTH - 1)
+            {
+                tokens[count][len++] = *ptr++;
+            }
         }
 
         tokens[count][len] = '\0';

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "core/model/domain_types.h"
 #include "core/model/param_types.h"
-#include "core/model/command_types.h"
+//#include "core/model/command_types.h"
 
 typedef enum
 {
@@ -15,6 +15,7 @@ typedef enum
     EVT_ERROR,
     EVT_RESET,
     EVT_SAVE,
+    EVT_KEY_PRESS,
     //Eventos de error
     EV_PARSE_UNKNOWN,
     EV_PARSE_INVALID_PARAM,
