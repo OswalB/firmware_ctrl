@@ -19,13 +19,14 @@ static const char* messagePrefix(MessageType type)
         case MSG_DBG:   return "[DBG] ";
         case MSG_ERR:   return "[ERR] ";
         case MSG_FORCE: return "[FRC] ";
+        case MSG_NONE:  return "";
         default:        return "";
     }
 }
 
 static bool shouldPrint(MessageType type)
 {
-    if (type == MSG_FORCE)
+    if (type == MSG_FORCE || type == MSG_NONE)
         return true;
 
     switch (g_consoleMode)
@@ -66,7 +67,12 @@ void Console_Print(MessageType type, const char *format, ...)
     const char* prefix = messagePrefix(type);
 
     snprintf(finalBuffer, sizeof(finalBuffer), "%s%s", prefix, buffer);
-
-    Transport_Write(finalBuffer);
+    if(type == MSG_NONE)
+    {
+        Transport_Write(finalBuffer);
+    }else{
+        Transport_Writeln(finalBuffer);
+    }
+    
     set_stateConsole(CONS_BUSY);
 }

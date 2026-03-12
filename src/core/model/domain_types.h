@@ -8,5 +8,6 @@ typedef enum
     DOMAIN_LED,
     DOMAIN_SENSOR,
     DOMAIN_CUSTOM,
+    DOMAIN_MENU,
     DOMAIN_COUNT
 } DomainType;

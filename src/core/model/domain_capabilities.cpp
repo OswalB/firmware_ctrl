@@ -71,6 +71,15 @@ static const DomainCapabilities domain_table[] =
              
             
          },
+         {
+            .domain=DOMAIN_MENU,
+            .supported_params_mask =0,
+            .supported_cmds_mask =
+            (1u << EVT_SAVE) | 
+            (1u << EVT_GET),
+            .param_ranges={0,0,false},
+            .id_range = {.min = 0, .max = 5, .has_range = true}
+         },
 };
 
 const DomainCapabilities *

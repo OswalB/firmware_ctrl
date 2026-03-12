@@ -13,7 +13,12 @@ void Transport_Send(const char *format, ...)
     Serial.println(buffer);
 }
 
-void Transport_Write(const char* msg)
+void Transport_Writeln(const char* msg)
 {
     Serial.println(msg);
+}
+
+void Transport_Write(const char* msg)
+{
+    Serial.print(msg);
 }

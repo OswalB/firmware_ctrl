@@ -10,6 +10,12 @@
 // #include "modules/led/led.h"
 // #include "drivers/led_pwm/led_pwm.h"
 
+#include <stdio.h>
+#include "lib/menu/menu.h"
+#include "lib/menu/menu_table.h"
+
+void menu_print(void);
+
 static MachineState fsm_state = MS_IDLE;
 static MachineState g_state;
 
@@ -113,7 +119,7 @@ void machine_update(void)
 void machine_handleEvent(Event &evt)
 {
     Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
-    Console_Print(MSG_LOG,"[key delete] is # %d",enum_from_string(key_table_enum,key_table_count,"key delete"));
+    Console_Print(MSG_LOG, "[key delete] is # %d", enum_from_string(key_table_enum, key_table_count, "key delete"));
     //  🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
@@ -123,23 +129,21 @@ void machine_handleEvent(Event &evt)
 
     if (evt.type == EVT_KEY_PRESS)
     {
+        evt.domain = DOMAIN_MENU;
         switch (evt.value)
         {
         case KEY_UP:
-            Console_Print(MSG_LOG, "tec arriba");
-            evt.type = EVT_SET;
-            evt.domain = DOMAIN_LED;
-            evt.id = 0;
-            evt.param = PARAM_STATE;
-            evt.value = 1;
+            menu_input(MENU_UP);
             break;
         case KEY_DOWN:
-            Console_Print(MSG_LOG, "tec abajo");
-            evt.type = EVT_SET;
-            evt.domain = DOMAIN_LED;
-            evt.id = 0;
-            evt.param = PARAM_STATE;
-            evt.value = 0;
+            menu_input(MENU_DOWN);
+            break;
+        case KEY_RIGHT:
+            menu_input(MENU_ENTER);
+            break;
+
+        case KEY_LEFT:
+            menu_input(MENU_BACK);
             break;
         default:
 
@@ -165,10 +169,39 @@ void machine_handleEvent(Event &evt)
         Console_Print(MSG_DBG, "routing CUSTOM");
         break;
 
+    case DOMAIN_MENU:
+
+        menu_print();
+        break;
     default:
         Console_Print(MSG_ERR,
                       "Unknown domain %d\n",
                       evt.domain);
         break;
     }
+}
+
+//* * * * * TEST * * * * * *  BORRAR AL FINAL * * * *
+
+void menu_print(void)
+{
+    MenuView view;
+    char buf[32];
+    menu_render(&view);
+
+    Console_Print(MSG_NONE, "\n");
+
+    for (uint8_t i = 0; i < view.count; i++)
+    {
+        if (i == view.cursor)
+            Console_Print(MSG_NONE, "> ");
+        else
+            Console_Print(MSG_NONE, "  ");
+
+        strcpy_P(buf, (PGM_P)view.lines[i]);
+        Console_Print(MSG_NONE, buf);
+        Console_Print(MSG_NONE, "\n\r");
+    }
+
+    Console_Print(MSG_NONE, "\n");
 }

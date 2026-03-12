@@ -7,7 +7,7 @@
 #include "modules/system/system.h"
 #include "modules/persistence/persistence.h"
 #include "lib/crc32/crc32.h"
-
+#include "lib/menu/menu.h"
 
 void app_init()
 {
@@ -24,7 +24,7 @@ void app_init()
     //test de eeprom to cache
     const MachineConfig *cfg = machine_config_get();
     Console_Print(MSG_DBG,"Custom [0]: %s led: %ld", cfg->customer[0], cfg->Led1_time);
-
+    menu_init();
 //---------------------------------------
 
 

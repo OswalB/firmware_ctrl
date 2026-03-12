@@ -9,10 +9,12 @@ typedef enum {
 } ConsoleMode;
 
 typedef enum {
+    MSG_NONE =0,
     MSG_LOG,
     MSG_DBG,
     MSG_FORCE,
-    MSG_ERR
+    MSG_ERR,
+    
 } MessageType;
 
 void Console_SetMode(ConsoleMode mode);
