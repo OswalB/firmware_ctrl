@@ -2,6 +2,9 @@
 #include "menu_table.h"
 #include <string.h>
 #include "modules/console/console.h"
+#include "core/event/event_queue.h"
+#include "core/model/key_types.h"
+#include "input/command/parser.h"
 
 static MenuState state;
 
@@ -18,12 +21,12 @@ static uint8_t child_count(uint8_t parent_id)
 {
     uint8_t count = 0;
 
-    for(uint8_t i=0;i<menu_table_size;i++)
+    for (uint8_t i = 0; i < menu_table_size; i++)
     {
         MenuItem item;
         memcpy_P(&item, &menu_table[i], sizeof(MenuItem));
 
-        if(item.parent == parent_id)
+        if (item.parent == parent_id)
             count++;
     }
 
@@ -34,14 +37,14 @@ static uint8_t child_at(uint8_t parent_id, uint8_t index)
 {
     uint8_t count = 0;
 
-    for(uint8_t i=0;i<menu_table_size;i++)
+    for (uint8_t i = 0; i < menu_table_size; i++)
     {
         MenuItem item;
         memcpy_P(&item, &menu_table[i], sizeof(MenuItem));
 
-        if(item.parent == parent_id)
+        if (item.parent == parent_id)
         {
-            if(count == index)
+            if (count == index)
                 return i;
 
             count++;
@@ -67,69 +70,77 @@ void menu_input(MenuInputEvent ev)
 {
     uint8_t count = child_count(parent);
 
-    switch(ev)
+    switch (ev)
     {
-        case MENU_UP:
+    case MENU_UP:
 
-            if(cursor > 0)
-                cursor--;
+        if (cursor > 0)
+            cursor--;
 
-            if(cursor < scroll)
-                scroll--;
-
-        break;
-
-        case MENU_DOWN:
-
-            if(cursor < count-1)
-                cursor++;
-
-            if(cursor >= scroll + MENU_MAX_VISIBLE)
-                scroll++;
+        if (cursor < scroll)
+            scroll--;
 
         break;
 
-        case MENU_ENTER:
+    case MENU_DOWN:
+
+        if (cursor < count - 1)
+            cursor++;
+
+        if (cursor >= scroll + MENU_MAX_VISIBLE)
+            scroll++;
+
+        break;
+
+    case MENU_ENTER:
+    {
+        uint8_t index = child_at(parent, cursor);
+
+        MenuItem item;
+        memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+
+        if (item.type == MENU_ITEM_SUBMENU)
         {
-            uint8_t index = child_at(parent, cursor);
+            parent_stack[level++] = parent;
+            parent = item.id;
 
-            MenuItem item;
-            memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
-
-            if(item.type == MENU_ITEM_SUBMENU)
-            {
-                parent_stack[level++] = parent;
-                parent = item.id;
-
-                cursor = 0;
-                scroll = 0;
-            }
-
-            else if(item.type == MENU_ITEM_BACK)
-            {
-                if(level > 0)
-                {
-                    parent = parent_stack[--level];
-                    cursor = 0;
-                    scroll = 0;
-                }
-            }
-
+            cursor = 0;
+            scroll = 0;
         }
-        break;
 
-        case MENU_BACK:
-
-            if(level > 0)
+        else if (item.type == MENU_ITEM_BACK)
+        {
+            if (level > 0)
             {
                 parent = parent_stack[--level];
                 cursor = 0;
                 scroll = 0;
             }
+        }
+
+        else if (item.type == MENU_ITEM_COMMAND)
+        {
+            MenuItem item;
+            memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+            
+            parser_process_tokens(item.tokens,5);
+
+        }
+    }
+    break;
+
+    case MENU_BACK:  
+
+        if (level > 0)
+        {
+            parent = parent_stack[--level];
+            cursor = 0;
+            scroll = 0;
+        }
 
         break;
 
-        default:
+    default:
         break;
     }
 }
@@ -141,11 +152,11 @@ void menu_render(MenuView *view)
     view->count = 0;
     view->cursor = cursor - scroll;
 
-    for(uint8_t i=0;i<MENU_MAX_VISIBLE;i++)
+    for (uint8_t i = 0; i < MENU_MAX_VISIBLE; i++)
     {
         uint8_t idx = scroll + i;
 
-        if(idx >= count)
+        if (idx >= count)
             break;
 
         uint8_t table_index = child_at(parent, idx);
