@@ -36,7 +36,7 @@ void serial_update(void)
     if (key != KEY_NONE)
     {
       // event_send(EVT_KEY_PRESS, key);
-      Console_Print(MSG_DBG, "Key= %d", key);
+      //Console_Print(MSG_DBG, "Key= %d", key);
       Event ev ={};
       ev.type = EVT_KEY_PRESS;
       ev.value = key;

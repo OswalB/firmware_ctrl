@@ -27,6 +27,7 @@ const char label_reset[] PROGMEM = "Reset";
 const char label_led_state1[] PROGMEM = "Estado 1";
 const char label_led_state2[] PROGMEM = "Estado 2";
 const char label_led_state0[] PROGMEM = "Led OFF";
+const char label_led_time[] PROGMEM = "Periodo";
 
 const MenuItem menu_table[] PROGMEM =
     {
@@ -44,7 +45,8 @@ const MenuItem menu_table[] PROGMEM =
         {8, 1, MENU_ITEM_COMMAND, label_led_state1, {TOK_CMD(EVT_SET), TOK_DOMAIN(DOMAIN_LED), TOK_NUM(0),TOK_PARAM(PARAM_STATE),TOK_NUM(1)}},
         {9, 1, MENU_ITEM_COMMAND, label_led_state2, {TOK_CMD(EVT_SET), TOK_DOMAIN(DOMAIN_LED), TOK_NUM(0),TOK_PARAM(PARAM_STATE),TOK_NUM(2)}},
         {10, 1, MENU_ITEM_COMMAND, label_led_state0, {TOK_CMD(EVT_SET), TOK_DOMAIN(DOMAIN_LED), TOK_NUM(0),TOK_PARAM(PARAM_STATE),TOK_NUM(0)}},
-        {11, 2, MENU_ITEM_BACK, label_back},
+        {11, 1, MENU_ITEM_COMMAND, label_led_time, {TOK_CMD(EVT_SET), TOK_DOMAIN(DOMAIN_LED), TOK_NUM(0),TOK_PARAM(PARAM_TIME),TOK_NUM(0)}},
+        {12, 2, MENU_ITEM_BACK, label_back},
 };
 
 const uint8_t menu_table_size = sizeof(menu_table) / sizeof(MenuItem);

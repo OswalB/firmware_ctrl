@@ -118,8 +118,8 @@ void machine_update(void)
 
 void machine_handleEvent(Event &evt)
 {
-    Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
-    Console_Print(MSG_LOG, "[key delete] is # %d", enum_from_string(key_table_enum, key_table_count, "key delete"));
+    //Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
+    //Console_Print(MSG_LOG, "[key delete] is # %d", enum_from_string(key_table_enum, key_table_count, "key delete"));
     //  🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
@@ -202,6 +202,11 @@ void menu_print(void)
         Console_Print(MSG_NONE, buf);
         Console_Print(MSG_NONE, "\n\r");
     }
+
+    /*if(state == MENU_STATE_EDIT)
+{
+    Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
+}*/
 
     Console_Print(MSG_NONE, "\n");
 }

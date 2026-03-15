@@ -6,15 +6,16 @@ typedef enum
 {
     MENU_ITEM_SUBMENU,
     MENU_ITEM_COMMAND,
+    MENU_ITEM_PARAM,
     MENU_ITEM_VALUE,
     MENU_ITEM_BACK
 } MenuItemType;
 
 typedef enum
 {
-    MENU_HOME,
-    MENU_NAV,
-    MENU_EDIT
+    MENU_STATE_HOME,
+    MENU_STATE_NAV,
+    MENU_STATE_EDIT
 } MenuState;
 
 typedef enum
