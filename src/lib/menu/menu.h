@@ -17,4 +17,5 @@ void menu_init(void);
 void menu_input(MenuInputEvent ev);
 
 void menu_render(MenuView *view);
+MenuState menu_get_state();
 

@@ -10,7 +10,7 @@ static MenuState state;
 
 static int32_t edit_value;
 static uint8_t edit_item_id;
-int32_t led_time = 50;
+int32_t led_time = 500;
 
 static uint8_t cursor;
 static uint8_t scroll;
@@ -121,8 +121,7 @@ void menu_input(MenuInputEvent ev)
         return;
     }
 
-    if (state == MENU_STATE_NAV)
-    {
+    
 
         switch (ev)
         {
@@ -196,7 +195,7 @@ void menu_input(MenuInputEvent ev)
         default:
             break;
         }
-    }
+    
 }
 
 void menu_render(MenuView *view)
@@ -246,4 +245,8 @@ static void menu_commit_edit()
     tokens[4].number = edit_value;
 
     parser_process_tokens(tokens, 5);
+}
+
+MenuState menu_get_state(){
+    return state;
 }

@@ -202,11 +202,11 @@ void menu_print(void)
         Console_Print(MSG_NONE, buf);
         Console_Print(MSG_NONE, "\n\r");
     }
-
-    /*if(state == MENU_STATE_EDIT)
+    
+    if(menu_get_state() == MENU_STATE_EDIT)
 {
-    Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
-}*/
+    //Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
+}
 
     Console_Print(MSG_NONE, "\n");
 }
