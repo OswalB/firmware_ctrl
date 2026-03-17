@@ -35,9 +35,7 @@ void serial_update(void)
 
     if (key != KEY_NONE)
     {
-      // event_send(EVT_KEY_PRESS, key);
-      //Console_Print(MSG_DBG, "Key= %d", key);
-      Event ev ={};
+      Event ev = {};
       ev.type = EVT_KEY_PRESS;
       ev.value = key;
 
@@ -46,7 +44,17 @@ void serial_update(void)
       rxIndex = 0;
       continue;
     }
-    
+
+    if (c == 27 || c == '[')
+    {
+      continue;
+    }
+
+    // IMPORTANTE:
+    // No hacer echo directo de caracteres sin filtrar.
+    // Las secuencias ANSI (ej: flechas) generan caracteres intermedios
+    // que rompen el render si se imprimen.
+
     if (c == 8 || c == 127)
     {
       if (rxIndex > 0)

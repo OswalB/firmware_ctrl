@@ -186,21 +186,21 @@ void machine_handleEvent(Event &evt)
 void menu_print(void)
 {
     MenuView view;
-    char buf[32];
+    //char buf[32];
+    
     menu_render(&view);
+    
 
-    Console_Print(MSG_NONE, "\n");
+    Console_Print(MSG_LOG, "===========");
+    
 
     for (uint8_t i = 0; i < view.count; i++)
     {
         if (i == view.cursor)
-            Console_Print(MSG_NONE, "> ");
+            Console_Print(MSG_LOG, "> %s",view.lines[i]);
         else
-            Console_Print(MSG_NONE, "  ");
+            Console_Print(MSG_LOG, "  %s",view.lines[i]);
 
-        strcpy_P(buf, (PGM_P)view.lines[i]);
-        Console_Print(MSG_NONE, buf);
-        Console_Print(MSG_NONE, "\n\r");
     }
     
     if(menu_get_state() == MENU_STATE_EDIT)
@@ -208,5 +208,5 @@ void menu_print(void)
     //Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
 }
 
-    Console_Print(MSG_NONE, "\n");
+    //Console_Print(MSG_NONE, "\n");
 }

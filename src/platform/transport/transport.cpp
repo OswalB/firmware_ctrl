@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <stdarg.h>
+#include "input/serial/serial_if.h"
 
 void Transport_Send(const char *format, ...)
 {
@@ -15,10 +16,18 @@ void Transport_Send(const char *format, ...)
 
 void Transport_Writeln(const char* msg)
 {
-    Serial.println(msg);
+    Serial.flush();   //
+
+    while (*msg)
+    {
+        Serial.write(*msg++);
+    }
+
+    Serial.write('\r');
+    Serial.write('\n');
 }
 
 void Transport_Write(const char* msg)
 {
-    Serial.print(msg);
+    //Serial.print(msg);
 }

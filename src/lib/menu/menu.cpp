@@ -1,6 +1,7 @@
 #include "menu.h"
 #include "menu_table.h"
 #include <string.h>
+#include <stdio.h>
 #include "modules/console/console.h"
 #include "core/event/event_queue.h"
 #include "core/model/key_types.h"
@@ -121,81 +122,78 @@ void menu_input(MenuInputEvent ev)
         return;
     }
 
-    
+    switch (ev)
+    {
+    case MENU_UP:
 
-        switch (ev)
-        {
-        case MENU_UP:
+        if (cursor > 0)
+            cursor--;
 
-            if (cursor > 0)
-                cursor--;
+        if (cursor < scroll)
+            scroll--;
 
-            if (cursor < scroll)
-                scroll--;
-
-            break;
-
-        case MENU_DOWN:
-
-            if (cursor < count - 1)
-                cursor++;
-
-            if (cursor >= scroll + MENU_MAX_VISIBLE)
-                scroll++;
-
-            break;
-
-        case MENU_ENTER:
-        {
-            uint8_t index = child_at(parent, cursor);
-
-            MenuItem item;
-            memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
-
-            if (item.type == MENU_ITEM_SUBMENU)
-            {
-                parent_stack[level++] = parent;
-                parent = item.id;
-
-                cursor = 0;
-                scroll = 0;
-            }
-
-            else if (item.type == MENU_ITEM_BACK)
-            {
-                if (level > 0)
-                {
-                    parent = parent_stack[--level];
-                    cursor = 0;
-                    scroll = 0;
-                }
-            }
-
-            else if (item.type == MENU_ITEM_COMMAND)
-            {
-                MenuItem item;
-                memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
-
-                parser_process_tokens(item.tokens, 5);
-            }
-        }
         break;
 
-        case MENU_BACK:
+    case MENU_DOWN:
 
+        if (cursor < count - 1)
+            cursor++;
+
+        if (cursor >= scroll + MENU_MAX_VISIBLE)
+            scroll++;
+
+        break;
+
+    case MENU_ENTER:
+    {
+        uint8_t index = child_at(parent, cursor);
+
+        MenuItem item;
+        memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+
+        if (item.type == MENU_ITEM_SUBMENU)
+        {
+            parent_stack[level++] = parent;
+            parent = item.id;
+
+            cursor = 0;
+            scroll = 0;
+        }
+
+        else if (item.type == MENU_ITEM_BACK)
+        {
             if (level > 0)
             {
                 parent = parent_stack[--level];
                 cursor = 0;
                 scroll = 0;
             }
-
-            break;
-
-        default:
-            break;
         }
-    
+
+        else if (item.type == MENU_ITEM_COMMAND)
+        {
+            MenuItem item;
+            memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+
+            parser_process_tokens(item.tokens, 5);
+        }
+    }
+    break;
+
+    case MENU_BACK:
+
+        if (level > 0)
+        {
+            parent = parent_stack[--level];
+            cursor = 0;
+            scroll = 0;
+        }
+
+        break;
+
+    default:
+        break;
+    }
 }
 
 void menu_render(MenuView *view)
@@ -217,7 +215,22 @@ void menu_render(MenuView *view)
         MenuItem item;
         memcpy_P(&item, &menu_table[table_index], sizeof(MenuItem));
 
-        view->lines[i] = item.label;
+        // view->lines[i] = item.label;
+
+        char label[20];
+
+        strcpy_P(label, (PGM_P)item.label);
+
+        if (item.type == MENU_ITEM_PARAM)
+        {
+            int32_t val = menu_get_current_value(&item);
+
+            snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+        }
+        else
+        {
+            snprintf(view->lines[i], MENU_LINE_LEN, "%s", label);
+        }
 
         view->count++;
     }
@@ -247,6 +260,7 @@ static void menu_commit_edit()
     parser_process_tokens(tokens, 5);
 }
 
-MenuState menu_get_state(){
+MenuState menu_get_state()
+{
     return state;
 }

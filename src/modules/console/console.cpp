@@ -11,16 +11,20 @@ void Console_SetMode(ConsoleMode mode)
     g_consoleMode = mode;
 }
 
-static const char* messagePrefix(MessageType type)
+static const char *messagePrefix(MessageType type)
 {
     switch (type)
     {
-        case MSG_LOG:   return "[LOG] ";
-        case MSG_DBG:   return "[DBG] ";
-        case MSG_ERR:   return "[ERR] ";
-        case MSG_FORCE: return "[FRC] ";
-        case MSG_NONE:  return "";
-        default:        return "";
+    case MSG_LOG:
+        return "[LOG] ";
+    case MSG_DBG:
+        return "[DBG] ";
+    case MSG_ERR:
+        return "[ERR] ";
+    case MSG_FORCE:
+        return "[FRC] ";
+    default:
+        return "";
     }
 }
 
@@ -31,23 +35,23 @@ static bool shouldPrint(MessageType type)
 
     switch (g_consoleMode)
     {
-        case CONSOLE_NONE:
-            return false;
+    case CONSOLE_NONE:
+        return false;
 
-        case CONSOLE_LOG:
-            return type == MSG_LOG;
+    case CONSOLE_LOG:
+        return type == MSG_LOG;
 
-        case CONSOLE_DBG:
-            return type == MSG_DBG;
+    case CONSOLE_DBG:
+        return type == MSG_DBG;
 
-        case CONSOLE_ERR:
-            return type == MSG_ERR;
+    case CONSOLE_ERR:
+        return type == MSG_ERR;
 
-        case CONSOLE_ALL:
-            return true;
+    case CONSOLE_ALL:
+        return true;
 
-        default:
-            return false;
+    default:
+        return false;
     }
 }
 
@@ -57,22 +61,19 @@ void Console_Print(MessageType type, const char *format, ...)
         return;
 
     char buffer[128];
-    char finalBuffer[160];  // espacio extra para prefijo
+    char finalBuffer[160]; // espacio extra para prefijo
 
     va_list args;
     va_start(args, format);
     vsnprintf(buffer, sizeof(buffer), format, args);
     va_end(args);
 
-    const char* prefix = messagePrefix(type);
+    const char *prefix = messagePrefix(type);
 
-    snprintf(finalBuffer, sizeof(finalBuffer), "%s%s", prefix, buffer);
-    if(type == MSG_NONE)
-    {
-        Transport_Write(finalBuffer);
-    }else{
-        Transport_Writeln(finalBuffer);
-    }
-    
+     snprintf(finalBuffer, sizeof(finalBuffer), "%s%s", prefix, buffer);
+   
+
     set_stateConsole(CONS_BUSY);
+    Transport_Writeln(finalBuffer);
+    set_stateConsole(CONS_READY);
 }

@@ -4,11 +4,12 @@
 
 #define MENU_MAX_VISIBLE 4
 #define MENU_MAX_DEPTH   3
+#define MENU_LINE_LEN 32
 
 typedef struct
 {
     uint8_t count;
-    const char *lines[MENU_MAX_VISIBLE];
+    char lines[MENU_MAX_VISIBLE][MENU_LINE_LEN];
     uint8_t cursor;
 } MenuView;
 
