@@ -109,6 +109,7 @@ static void led_stop(const Event &evt)
 static void led_getTime(const Event &evt)
 {
     Console_Print(MSG_LOG,
-                  "No implementado: LED %d -> get TIME\n",
-                  evt.id);
+                  "LED %d time-> %d",
+                  evt.id, led::getTime(evt.id));
+    ;
 }

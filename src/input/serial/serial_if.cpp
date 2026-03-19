@@ -16,6 +16,9 @@ Console_status g_consoleStatus = CONS_BUSY;
 
 /* ===== Prototipos privados ===== */
 
+static AnsiState ansiState = ANSI_IDLE;
+static uint8_t ansiValue = 0;
+
 KeyCode ansi_decode(char c);
 
 void serial_init(void)

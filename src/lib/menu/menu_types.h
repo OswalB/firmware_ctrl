@@ -18,6 +18,15 @@ typedef enum
     MENU_STATE_EDIT
 } MenuState;
 
+typedef struct
+{
+    int original;
+    int current;
+    int *target;   // puntero al valor real
+} EditSession;
+
+//static EditSession edit;
+
 typedef enum
 {
     MENU_UP,
@@ -26,7 +35,7 @@ typedef enum
     MENU_BACK,
     MENU_INC,
     MENU_DEC,
-    MENU_TIMEOUT,
-    MENU_OPEN
+    //MENU_TIMEOUT,
+    //MENU_OPEN
 } MenuInputEvent;
 

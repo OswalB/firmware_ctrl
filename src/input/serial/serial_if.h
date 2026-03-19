@@ -19,8 +19,7 @@ typedef enum
     ANSI_NUMBER
 } AnsiState;
 
-static AnsiState ansiState = ANSI_IDLE;
-static uint8_t ansiValue = 0;
+
 
 void set_stateConsole(Console_status st);
 

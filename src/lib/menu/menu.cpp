@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "modules/console/console.h"
+#include "modules/led/led_module.h"
 #include "core/event/event_queue.h"
 #include "core/model/key_types.h"
 #include "input/command/parser.h"
@@ -20,10 +21,9 @@ static uint8_t parent;
 static uint8_t parent_stack[MENU_MAX_DEPTH];
 static uint8_t level;
 
-static uint8_t visible_items[MENU_MAX_VISIBLE];
-
 static int32_t menu_get_current_value(const MenuItem *item);
 static void menu_commit_edit();
+int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item);
 
 static uint8_t child_count(uint8_t parent_id)
 {
@@ -239,7 +239,16 @@ void menu_render(MenuView *view)
 static int32_t menu_get_current_value(const MenuItem *item)
 {
     if (item->tokens[3].param == PARAM_TIME)
-        return led_time;
+    {
+        if (state == MENU_STATE_EDIT)
+        {
+            return edit_value;
+        }
+        else
+        {
+            return led::getTime(0);
+        }
+    }
 
     return 0;
 }
@@ -248,7 +257,6 @@ static void menu_commit_edit()
 {
     MenuItem item;
 
-    // menu_get_item(edit_item_id, &item);
     memcpy_P(&item, &menu_table[edit_item_id], sizeof(MenuItem));
 
     Token tokens[5];
@@ -263,4 +271,14 @@ static void menu_commit_edit()
 MenuState menu_get_state()
 {
     return state;
+}
+
+int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item)
+{
+    if (state == MENU_STATE_EDIT)
+    {
+        return edit_value; // 👈 valor temporal
+    }
+
+    return menu_get_current_value(item); // 👈 valor real
 }

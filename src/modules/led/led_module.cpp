@@ -22,6 +22,11 @@ namespace led
         return true;
     }
 
+    uint32_t getTime(uint8_t _id)
+    {
+        return leds[_id].get_time();
+    }
+
     bool saveTime(uint8_t id, int32_t timeMs)
     {
         //leds[id].set_time(timeMs);
