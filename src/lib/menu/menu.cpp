@@ -136,7 +136,8 @@ void menu_input(MenuInputEvent ev)
 
     case MENU_DOWN:
 
-        if (cursor < count - 1)
+        //if (cursor < count - 1)
+        if (count > 0 && cursor < count - 1)
             cursor++;
 
         if (cursor >= scroll + MENU_MAX_VISIBLE)
@@ -172,8 +173,8 @@ void menu_input(MenuInputEvent ev)
 
         else if (item.type == MENU_ITEM_COMMAND)
         {
-            MenuItem item;
-            memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+            //MenuItem item;
+            //memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
 
             parser_process_tokens(item.tokens, 5);
         }
@@ -215,15 +216,14 @@ void menu_render(MenuView *view)
         MenuItem item;
         memcpy_P(&item, &menu_table[table_index], sizeof(MenuItem));
 
-        // view->lines[i] = item.label;
-
         char label[20];
 
         strcpy_P(label, (PGM_P)item.label);
 
         if (item.type == MENU_ITEM_PARAM)
         {
-            int32_t val = menu_get_current_value(&item);
+            //int32_t val = menu_get_current_value(&item);
+            int32_t val = menu_get_display_value(table_index, &item);
 
             snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
         }
@@ -240,14 +240,7 @@ static int32_t menu_get_current_value(const MenuItem *item)
 {
     if (item->tokens[3].param == PARAM_TIME)
     {
-        if (state == MENU_STATE_EDIT)
-        {
-            return edit_value;
-        }
-        else
-        {
-            return led::getTime(0);
-        }
+        return led::getTime(0);
     }
 
     return 0;
@@ -275,10 +268,10 @@ MenuState menu_get_state()
 
 int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item)
 {
-    if (state == MENU_STATE_EDIT)
+    if (state == MENU_STATE_EDIT && item_id == edit_item_id)
     {
-        return edit_value; // 👈 valor temporal
+        return edit_value;
     }
 
-    return menu_get_current_value(item); // 👈 valor real
+    return menu_get_current_value(item);
 }

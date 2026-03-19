@@ -156,7 +156,7 @@ void machine_handleEvent(Event &evt)
     {
     case DOMAIN_LED:
         machine_led_handle(evt);
-        Console_Print(MSG_DBG, "routing LED");
+        
         break;
 
     case DOMAIN_MOTOR:

@@ -33,8 +33,8 @@ typedef enum
     MENU_DOWN,
     MENU_ENTER,
     MENU_BACK,
-    MENU_INC,
-    MENU_DEC,
+    //MENU_INC,
+    //MENU_DEC,
     //MENU_TIMEOUT,
     //MENU_OPEN
 } MenuInputEvent;
