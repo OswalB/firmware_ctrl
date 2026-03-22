@@ -8,6 +8,7 @@ typedef struct
 {
     int32_t min;
     int32_t max;
+    int32_t max_step;
     bool has_range;
 } ParamRange;
 
@@ -28,3 +29,4 @@ typedef struct
 
 const DomainCapabilities *get_domain_capabilities(DomainType domain);
 bool validate_domain_capabilities_table(void);
+const DomainCapabilities* get_domain_caps(DomainType domain);

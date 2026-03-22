@@ -6,9 +6,7 @@
 #include "core/domains/domain_led.h"
 #include "core/domains/domain_custom.h"
 #include "lib/utils/interpreter.h"
-// #include "core/types/event_types.h"
-// #include "modules/led/led.h"
-// #include "drivers/led_pwm/led_pwm.h"
+#include "lib/interface_hmi/accel_input.h"
 
 #include <stdio.h>
 #include "lib/menu/menu.h"
@@ -116,11 +114,13 @@ void machine_update(void)
     }
 }
 
+//AccelTracker acc = {0, 0, 0, 500};
+
 void machine_handleEvent(Event &evt)
 {
-    //Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
-    //Console_Print(MSG_LOG, "[key delete] is # %d", enum_from_string(key_table_enum, key_table_count, "key delete"));
-    //  🔴 1. Eventos globales
+    // Console_Print(MSG_DBG, "Tecla ev=%s", enum_to_string(key_table_enum, key_table_count, evt.value));
+    // Console_Print(MSG_LOG, "[key delete] is # %d", enum_from_string(key_table_enum, key_table_count, "key delete"));
+    //   🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
         g_state = MS_ERROR;
@@ -145,6 +145,9 @@ void machine_handleEvent(Event &evt)
         case KEY_LEFT:
             menu_input(MENU_BACK);
             break;
+
+        case KEY_DELETE:
+            
         default:
 
             break;
@@ -156,7 +159,7 @@ void machine_handleEvent(Event &evt)
     {
     case DOMAIN_LED:
         machine_led_handle(evt);
-        
+
         break;
 
     case DOMAIN_MOTOR:
@@ -186,27 +189,24 @@ void machine_handleEvent(Event &evt)
 void menu_print(void)
 {
     MenuView view;
-    //char buf[32];
-    
+    // char buf[32];
+
     menu_render(&view);
-    
 
     Console_Print(MSG_LOG, "===========");
-    
 
     for (uint8_t i = 0; i < view.count; i++)
     {
         if (i == view.cursor)
-            Console_Print(MSG_LOG, "> %s",view.lines[i]);
+            Console_Print(MSG_LOG, "> %s", view.lines[i]);
         else
-            Console_Print(MSG_LOG, "  %s",view.lines[i]);
-
+            Console_Print(MSG_LOG, "  %s", view.lines[i]);
     }
-    
-    if(menu_get_state() == MENU_STATE_EDIT)
-{
-    //Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
-}
 
-    //Console_Print(MSG_NONE, "\n");
+    if (menu_get_state() == MENU_STATE_EDIT)
+    {
+        // Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
+    }
+
+    // Console_Print(MSG_NONE, "\n");
 }

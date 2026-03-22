@@ -6,7 +6,8 @@
 #include "core/model/domain_types.h"
 #include "core/model/event_types.h"
 
-#define PARAM_UNUSED {0, 0, false}
+#define PARAM_UNUSED {0,0, 0, false}
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 static const DomainCapabilities domain_table[] =
     {
@@ -25,10 +26,10 @@ static const DomainCapabilities domain_table[] =
          .param_ranges =
              {
                  [PARAM_UNKNOW] = PARAM_UNUSED,
-                 [PARAM_STATE] = {.min = 0, .max = 2, .has_range = true},
+                 [PARAM_STATE] = {.min = 0, .max = 2,.max_step = 0, .has_range = true},
                  [PARAM_SPEED] = PARAM_UNUSED,
-                 [PARAM_DUTY] = {.min = 0, .max = 100, .has_range = true},
-                 [PARAM_TIME] = {.min = 0, .max = 60000, .has_range = true}},
+                 [PARAM_DUTY] = {.min = 0, .max = 100, .max_step = 1,.has_range = true},
+                 [PARAM_TIME] = {.min = 0, .max = 60000, .max_step = 400, .has_range = true}},
 
          .id_range = {.min = 0, .max = 2, .has_range = true}},
         // DOMMAIN MOTOR ***
@@ -44,7 +45,7 @@ static const DomainCapabilities domain_table[] =
              {
                  [PARAM_UNKNOW] = PARAM_UNUSED,
                  [PARAM_STATE] = PARAM_UNUSED,
-                 [PARAM_SPEED] = {.min = 0, .max = 100, .has_range = true},
+                 [PARAM_SPEED] = {.min = 0, .max = 100,.max_step = 0, .has_range = true},
                  [PARAM_DUTY] = PARAM_UNUSED,
                  [PARAM_TIME] = PARAM_UNUSED},
          .id_range = {.min = 0, .max = 3, .has_range = true}},
@@ -55,8 +56,8 @@ static const DomainCapabilities domain_table[] =
          .supported_cmds_mask = (1u << EVT_GET),
          .param_ranges = {
              [PARAM_UNKNOW] = PARAM_UNUSED,
-             [PARAM_STATE] = {.min = 0, .max = 0, .has_range = true}, // PARAM_STATE
-             {0, 0, false},
+             [PARAM_STATE] = {.min = 0, .max = 0,.max_step = 0, .has_range = true}, // PARAM_STATE
+             [PARAM_SPEED] = PARAM_UNUSED,
              [PARAM_DUTY] = PARAM_UNUSED,
              [PARAM_TIME] = PARAM_UNUSED},
          {0, 10, true}},
@@ -184,4 +185,14 @@ bool validate_domain_capabilities_table(void)
     }
     Console_Print(MSG_LOG, "Ok. Capabilities");
     return true;
+}
+
+const DomainCapabilities* get_domain_caps(DomainType domain)
+{
+    for (int i = 0; i <  ARRAY_SIZE(domain_table); i++)
+    {
+        if (domain_table[i].domain == domain)
+            return &domain_table[i];
+    }
+    return NULL;
 }

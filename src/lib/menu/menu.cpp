@@ -6,7 +6,11 @@
 #include "modules/led/led_module.h"
 #include "core/event/event_queue.h"
 #include "core/model/key_types.h"
+#include "core/model/domain_capabilities.h"
 #include "input/command/parser.h"
+#include "lib/interface_hmi/accel_input.h"
+
+AccelTracker acc = {0, 0, 0, 500};
 
 static MenuState state;
 
@@ -78,11 +82,12 @@ void menu_input(MenuInputEvent ev)
 {
     uint8_t count = child_count(parent);
 
+    uint8_t index = child_at(parent, cursor);
+    MenuItem item;
+    memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+
     if (state == MENU_STATE_NAV && ev == MENU_ENTER)
     {
-        uint8_t index = child_at(parent, cursor);
-        MenuItem item;
-        memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
 
         if (item.type == MENU_ITEM_PARAM)
         {
@@ -99,14 +104,25 @@ void menu_input(MenuInputEvent ev)
 
     if (state == MENU_STATE_EDIT)
     {
+        DomainType domain = item.tokens[1].domain;
+        ParamType param = item.tokens[3].param;
+        const DomainCapabilities *caps = get_domain_caps(domain);
+        ParamRange range = caps->param_ranges[param];
+
+        int step = accel_update(&acc, ev, 1, range.max_step);
+        Console_Print(MSG_DBG, "Accelv %d", step);
         switch (ev)
         {
         case MENU_UP:
-            edit_value++;
+            edit_value += step;
+            if (range.has_range && edit_value > range.max)
+                edit_value = range.max;
             break;
 
         case MENU_DOWN:
-            edit_value--;
+            edit_value -= step;
+            if (range.has_range && edit_value < range.min)
+                edit_value = range.min;
             break;
         case MENU_ENTER:
             menu_commit_edit();
@@ -136,7 +152,7 @@ void menu_input(MenuInputEvent ev)
 
     case MENU_DOWN:
 
-        //if (cursor < count - 1)
+        // if (cursor < count - 1)
         if (count > 0 && cursor < count - 1)
             cursor++;
 
@@ -173,8 +189,8 @@ void menu_input(MenuInputEvent ev)
 
         else if (item.type == MENU_ITEM_COMMAND)
         {
-            //MenuItem item;
-            //memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
+            // MenuItem item;
+            // memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
 
             parser_process_tokens(item.tokens, 5);
         }
@@ -222,7 +238,7 @@ void menu_render(MenuView *view)
 
         if (item.type == MENU_ITEM_PARAM)
         {
-            //int32_t val = menu_get_current_value(&item);
+            // int32_t val = menu_get_current_value(&item);
             int32_t val = menu_get_display_value(table_index, &item);
 
             snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
