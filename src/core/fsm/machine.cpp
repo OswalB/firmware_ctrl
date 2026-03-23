@@ -114,12 +114,9 @@ void machine_update(void)
     }
 }
 
-//AccelTracker acc = {0, 0, 0, 500};
-
 void machine_handleEvent(Event &evt)
 {
     menu_dirty=true;
-    Console_Print(MSG_DBG,"event...");
     //   🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {

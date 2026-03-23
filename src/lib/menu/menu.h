@@ -7,7 +7,7 @@
 #define MENU_MAX_DEPTH   3
 #define MENU_LINE_LEN 32
 
-static bool menu_dirty = true;
+extern bool menu_dirty;
 
 typedef struct
 {

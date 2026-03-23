@@ -18,7 +18,9 @@ void menu_print(void);
 //****
 
 AccelTracker acc = {0, 0, 0, 500};
+uint32_t last_render = 0;
 
+bool menu_dirty = true;
 static MenuState state;
 
 static int32_t edit_value;
@@ -87,16 +89,17 @@ void menu_init(void)
 
 void menu_update(void)
 {
-    if (menu_dirty)
+    if (menu_dirty & (millis() - last_render > 200))
     {
         menu_print();
         menu_dirty = false;
+        last_render = millis();
     }
 }
 
 void menu_input(MenuInputEvent ev)
 {
-    menu_dirty = true;
+    // menu_dirty = true;
     uint8_t count = child_count(parent);
 
     uint8_t index = child_at(parent, cursor);
@@ -152,7 +155,7 @@ void menu_input(MenuInputEvent ev)
             Console_Print(MSG_LOG, "EDIT CANCEL");
             break;
         }
-        Console_Print(MSG_LOG, "VAL=%ld", edit_value);
+        //Console_Print(MSG_LOG, "VAL=%ld", edit_value);
         return;
     }
 
@@ -288,7 +291,7 @@ static void menu_commit_edit()
     tokens[4].number = edit_value;
 
     parser_process_tokens(tokens, 5);
-    menu_dirty = true;
+    // menu_dirty = true;
 }
 
 MenuState menu_get_state()
@@ -300,10 +303,8 @@ int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item)
 {
     if (state == MENU_STATE_EDIT && item_id == edit_item_id)
     {
-        Console_Print(MSG_DBG, "en edicion");
         return edit_value;
     }
-    Console_Print(MSG_DBG, "en edicion NONE");
 
     return menu_get_current_value(item);
 }
@@ -366,7 +367,7 @@ static int32_t menu_get_current_value(const MenuItem *item)
     uint8_t id = menu_item_get_instance(item);
     ParamType param = menu_item_get_param(item); // item->tokens[3].param;
 
-    Console_Print(MSG_DBG, "id test %d %d %d", domain, id, param);
+    // Console_Print(MSG_DBG, "id test %d %d %d", domain, id, param);
     const DomainAccess *acc = &domain_access[domain];
 
     if (acc->getters[param])
@@ -376,8 +377,6 @@ static int32_t menu_get_current_value(const MenuItem *item)
 
     return 0;
 }
-
-
 
 //* * * * * TEST * * * * * *  BORRAR AL FINAL * * * *
 
