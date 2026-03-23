@@ -28,7 +28,7 @@ static const DomainCapabilities domain_table[] =
                  [PARAM_UNKNOW] = PARAM_UNUSED,
                  [PARAM_STATE] = {.min = 0, .max = 2,.max_step = 0, .has_range = true},
                  [PARAM_SPEED] = PARAM_UNUSED,
-                 [PARAM_DUTY] = {.min = 0, .max = 100, .max_step = 1,.has_range = true},
+                 [PARAM_DUTY] = {.min = 0, .max = 100, .max_step = 5,.has_range = true},
                  [PARAM_TIME] = {.min = 0, .max = 60000, .max_step = 400, .has_range = true}},
 
          .id_range = {.min = 0, .max = 2, .has_range = true}},

@@ -10,6 +10,12 @@
 #include "input/command/parser.h"
 #include "lib/interface_hmi/accel_input.h"
 
+//*********** FORWARDS ************ */
+static DomainType menu_item_get_domain(const MenuItem *item);
+static ParamType menu_item_get_param(const MenuItem *item);
+static uint8_t menu_item_get_instance(const MenuItem *item);
+//****
+
 AccelTracker acc = {0, 0, 0, 500};
 
 static MenuState state;
@@ -104,13 +110,14 @@ void menu_input(MenuInputEvent ev)
 
     if (state == MENU_STATE_EDIT)
     {
-        DomainType domain = item.tokens[1].domain;
-        ParamType param = item.tokens[3].param;
+        DomainType domain = menu_item_get_domain(&item);
+        ParamType param = menu_item_get_param(&item);
+
         const DomainCapabilities *caps = get_domain_caps(domain);
         ParamRange range = caps->param_ranges[param];
 
         int step = accel_update(&acc, ev, 1, range.max_step);
-        Console_Print(MSG_DBG, "Accelv %d", step);
+        // Console_Print(MSG_DBG, "Accelv %d", step);
         switch (ev)
         {
         case MENU_UP:
@@ -238,10 +245,19 @@ void menu_render(MenuView *view)
 
         if (item.type == MENU_ITEM_PARAM)
         {
-            // int32_t val = menu_get_current_value(&item);
             int32_t val = menu_get_display_value(table_index, &item);
 
-            snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+            char unit[8] = "";
+
+            if (item.unit != NULL)
+            {
+                strcpy_P(unit, (PGM_P)item.unit);
+                snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld %s", label, val, unit);
+            }
+            else
+            {
+                snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+            }
         }
         else
         {
@@ -290,4 +306,21 @@ int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item)
     }
 
     return menu_get_current_value(item);
+}
+
+//*********** HEPPERS ***********
+
+static DomainType menu_item_get_domain(const MenuItem *item)
+{
+    return item->tokens[1].domain;
+}
+
+static ParamType menu_item_get_param(const MenuItem *item)
+{
+    return item->tokens[3].param;
+}
+
+static uint8_t menu_item_get_instance(const MenuItem *item)
+{
+    return item->tokens[2].number;
 }

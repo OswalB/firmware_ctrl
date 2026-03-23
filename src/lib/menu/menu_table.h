@@ -12,7 +12,7 @@ typedef struct
     uint8_t parent;
     MenuItemType type;
     const char *label;
-
+    const char *unit;
     Token tokens[5];
 } MenuItem;
 
