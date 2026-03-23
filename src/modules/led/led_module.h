@@ -34,7 +34,8 @@ namespace led
         }
     };
 
-    uint32_t getTime(uint8_t _id);
+    int32_t getTime(uint8_t _id);
+    int32_t getDuty(uint8_t _id);
 
     bool saveTime(uint8_t id, int32_t timeMs);
     bool setDuty(uint8_t id, int32_t persent);

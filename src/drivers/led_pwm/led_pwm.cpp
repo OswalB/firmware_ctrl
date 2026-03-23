@@ -14,9 +14,14 @@ void LedPWM::set_time(uint32_t value)
   apply();
 }
 
-uint32_t LedPWM::get_time( )
+int32_t LedPWM::get_time( )
 {
   return _periodMs;
+}
+
+int32_t LedPWM::get_duty( )
+{
+  return _duty;
 }
 
 void LedPWM::set_duty(uint8_t value)

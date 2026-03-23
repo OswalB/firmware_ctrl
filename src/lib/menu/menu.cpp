@@ -14,6 +14,7 @@
 static DomainType menu_item_get_domain(const MenuItem *item);
 static ParamType menu_item_get_param(const MenuItem *item);
 static uint8_t menu_item_get_instance(const MenuItem *item);
+void menu_print(void);
 //****
 
 AccelTracker acc = {0, 0, 0, 500};
@@ -84,8 +85,18 @@ void menu_init(void)
     level = 0;
 }
 
+void menu_update(void)
+{
+    if (menu_dirty)
+    {
+        menu_print();
+        menu_dirty = false;
+    }
+}
+
 void menu_input(MenuInputEvent ev)
 {
+    menu_dirty = true;
     uint8_t count = child_count(parent);
 
     uint8_t index = child_at(parent, cursor);
@@ -117,7 +128,7 @@ void menu_input(MenuInputEvent ev)
         ParamRange range = caps->param_ranges[param];
 
         int step = accel_update(&acc, ev, 1, range.max_step);
-        // Console_Print(MSG_DBG, "Accelv %d", step);
+
         switch (ev)
         {
         case MENU_UP:
@@ -159,7 +170,6 @@ void menu_input(MenuInputEvent ev)
 
     case MENU_DOWN:
 
-        // if (cursor < count - 1)
         if (count > 0 && cursor < count - 1)
             cursor++;
 
@@ -196,9 +206,6 @@ void menu_input(MenuInputEvent ev)
 
         else if (item.type == MENU_ITEM_COMMAND)
         {
-            // MenuItem item;
-            // memcpy_P(&item, &menu_table[index], sizeof(MenuItem));
-
             parser_process_tokens(item.tokens, 5);
         }
     }
@@ -268,16 +275,6 @@ void menu_render(MenuView *view)
     }
 }
 
-static int32_t menu_get_current_value(const MenuItem *item)
-{
-    if (item->tokens[3].param == PARAM_TIME)
-    {
-        return led::getTime(0);
-    }
-
-    return 0;
-}
-
 static void menu_commit_edit()
 {
     MenuItem item;
@@ -291,6 +288,7 @@ static void menu_commit_edit()
     tokens[4].number = edit_value;
 
     parser_process_tokens(tokens, 5);
+    menu_dirty = true;
 }
 
 MenuState menu_get_state()
@@ -302,8 +300,10 @@ int32_t menu_get_display_value(uint8_t item_id, const MenuItem *item)
 {
     if (state == MENU_STATE_EDIT && item_id == edit_item_id)
     {
+        Console_Print(MSG_DBG, "en edicion");
         return edit_value;
     }
+    Console_Print(MSG_DBG, "en edicion NONE");
 
     return menu_get_current_value(item);
 }
@@ -323,4 +323,85 @@ static ParamType menu_item_get_param(const MenuItem *item)
 static uint8_t menu_item_get_instance(const MenuItem *item)
 {
     return item->tokens[2].number;
+}
+
+// * * * * *  TABLA FUNCIONES GET DATA PARAM * * * * * *
+static int32_t led_get_time(uint8_t id)
+{
+
+    return led::getTime(id);
+}
+
+static int32_t led_get_duty(uint8_t id)
+{
+    return led::getDuty(id);
+}
+
+static int32_t led_get_time(uint8_t id);
+static int32_t led_get_duty(uint8_t id);
+
+static const DomainAccess domain_access[] =
+    {
+        // DOMAIN_UNKNOW = 0
+        {
+            {NULL, NULL, NULL, NULL, NULL}},
+        // DOMAIN_MOTOR = 1
+        {
+            {NULL, NULL, NULL, NULL, NULL}},
+        // DOMAIN_LED = 2S
+        {
+            {
+                NULL,         // PARAM_UNKNOW    Orden es indispensable
+                NULL,         // PARAM_STATE
+                NULL,         // PARAM_SPEED
+                led_get_duty, // PARAM_DUTY
+                led_get_time  // PARAM_TIME
+            }},
+
+};
+
+static int32_t menu_get_current_value(const MenuItem *item)
+{
+    DomainType domain = menu_item_get_domain(item);
+    uint8_t id = menu_item_get_instance(item);
+    ParamType param = menu_item_get_param(item); // item->tokens[3].param;
+
+    Console_Print(MSG_DBG, "id test %d %d %d", domain, id, param);
+    const DomainAccess *acc = &domain_access[domain];
+
+    if (acc->getters[param])
+    {
+        return acc->getters[param](id);
+    }
+
+    return 0;
+}
+
+
+
+//* * * * * TEST * * * * * *  BORRAR AL FINAL * * * *
+
+void menu_print(void)
+{
+    MenuView view;
+    // char buf[32];
+
+    menu_render(&view);
+
+    Console_Print(MSG_LOG, "=====menu======");
+
+    for (uint8_t i = 0; i < view.count; i++)
+    {
+        if (i == view.cursor)
+            Console_Print(MSG_LOG, "> %s", view.lines[i]);
+        else
+            Console_Print(MSG_LOG, "  %s", view.lines[i]);
+    }
+
+    if (menu_get_state() == MENU_STATE_EDIT)
+    {
+        // Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
+    }
+
+    // Console_Print(MSG_NONE, "\n");
 }

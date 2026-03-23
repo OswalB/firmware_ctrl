@@ -22,9 +22,14 @@ namespace led
         return true;
     }
 
-    uint32_t getTime(uint8_t _id)
+    int32_t getTime(uint8_t _id)
     {
         return leds[_id].get_time();
+    }
+
+    int32_t getDuty(uint8_t _id)
+    {
+        return leds[_id].get_duty();
     }
 
     bool saveTime(uint8_t id, int32_t timeMs)
