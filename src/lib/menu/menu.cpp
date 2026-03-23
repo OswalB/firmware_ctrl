@@ -17,6 +17,9 @@ static uint8_t menu_item_get_instance(const MenuItem *item);
 void menu_print(void);
 //****
 
+#define LABEL_WIDTH 10
+#define VALUE_WIDTH 6
+
 AccelTracker acc = {0, 0, 0, 500};
 uint32_t last_render = 0;
 
@@ -155,7 +158,7 @@ void menu_input(MenuInputEvent ev)
             Console_Print(MSG_LOG, "EDIT CANCEL");
             break;
         }
-        //Console_Print(MSG_LOG, "VAL=%ld", edit_value);
+        // Console_Print(MSG_LOG, "VAL=%ld", edit_value);
         return;
     }
 
@@ -262,11 +265,15 @@ void menu_render(MenuView *view)
             if (item.unit != NULL)
             {
                 strcpy_P(unit, (PGM_P)item.unit);
-                snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld %s", label, val, unit);
+
+                // snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld %s", label, val, unit);
+
+                snprintf(view->lines[i], MENU_LINE_LEN,"%-8s=%6ld %s",label,(long)val,unit);
             }
             else
             {
-                snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+                //snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+                snprintf(view->lines[i], MENU_LINE_LEN,"%-8s=%6ld",label,(long)val);
             }
         }
         else
@@ -387,7 +394,7 @@ void menu_print(void)
 
     menu_render(&view);
 
-    Console_Print(MSG_LOG, "=====menu======");
+    Console_Print(MSG_LOG, "01234567890123456789");
 
     for (uint8_t i = 0; i < view.count; i++)
     {
