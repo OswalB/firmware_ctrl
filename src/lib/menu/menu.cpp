@@ -390,7 +390,6 @@ static int32_t menu_get_current_value(const MenuItem *item)
 void menu_print(void)
 {
     MenuView view;
-    // char buf[32];
 
     menu_render(&view);
 
@@ -403,11 +402,4 @@ void menu_print(void)
         else
             Console_Print(MSG_LOG, "  %s", view.lines[i]);
     }
-
-    if (menu_get_state() == MENU_STATE_EDIT)
-    {
-        // Console_Print(MSG_NONE,"Edit: %ld\n\r", edit_value);
-    }
-
-    // Console_Print(MSG_NONE, "\n");
 }

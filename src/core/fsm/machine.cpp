@@ -138,6 +138,12 @@ void machine_handleEvent(Event &evt)
         case KEY_RIGHT:
             menu_input(MENU_ENTER);
             break;
+        case KEY_OK:
+            menu_input(MENU_ENTER);
+            break;
+        case KEY_LONG:
+            menu_input(MENU_LONG);
+            break;    
 
         case KEY_LEFT:
             menu_input(MENU_BACK);

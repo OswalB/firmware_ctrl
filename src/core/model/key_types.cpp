@@ -22,8 +22,8 @@ extern const EnumEntry key_table_enum[] = {
     {"key F10", KEY_F10},
     {"key F11", KEY_F11},
     {"key F12", KEY_F12},
-    {"key OK", KEY_OK}
-
+    {"key OK", KEY_OK},
+    {"key LONG", KEY_LONG},
 };
 
 const size_t key_table_count =

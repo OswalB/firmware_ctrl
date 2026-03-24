@@ -10,6 +10,11 @@
 #define ENC_B_PIN 3  // DT
 #define ENC_SW_PIN 4 // botón
 
+#define LONG_PRESS_MS 800
+
+static uint32_t press_time = 0;
+static uint8_t long_sent = 0;
+
 static uint8_t prev_state = 0;
 static int8_t acc = 0;
 static uint8_t last_btn = 1;
@@ -37,22 +42,43 @@ void encoder_update(void)
 
     bool send = false;
 
-    //uint8_t state = read_encoder();
-
     // BOTÓN
     uint8_t btn = digitalRead(ENC_SW_PIN);
+    uint32_t now = millis();
 
+    // Detectar PRESIÓN
     if (btn == 0 && last_btn == 1)
     {
-        Console_Print(MSG_DBG, "BTN");
-        ev.value = KEY_OK;
-        send = true;
+        press_time = now;
+        long_sent = 0;
+    }
+
+    // Detectar MANTENIDO (long press)
+    if (btn == 0 && !long_sent)
+    {
+        if ((now - press_time) > LONG_PRESS_MS)
+        {
+            ev.value = KEY_LONG;
+            send = true;
+
+            long_sent = 1; // evitar repetición
+        }
+    }
+
+    // Detectar LIBERACIÓN (short press)
+    if (btn == 1 && last_btn == 0)
+    {
+        if (!long_sent)
+        {
+            ev.value = KEY_OK;
+            send = true;
+        }
     }
 
     last_btn = btn;
 
     // ENCODER
-     uint8_t state = read_encoder();
+    uint8_t state = read_encoder();
 
     if (state != prev_state)
     {
@@ -62,8 +88,7 @@ void encoder_update(void)
             (prev_state == 0b00 && state == 0b01) ||
             (prev_state == 0b01 && state == 0b11) ||
             (prev_state == 0b11 && state == 0b10) ||
-            (prev_state == 0b10 && state == 0b00)
-        )
+            (prev_state == 0b10 && state == 0b00))
         {
             acc++;
         }

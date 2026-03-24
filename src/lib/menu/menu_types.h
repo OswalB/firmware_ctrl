@@ -33,6 +33,7 @@ typedef enum
     MENU_DOWN,
     MENU_ENTER,
     MENU_BACK,
+    MENU_LONG,
     //MENU_INC,
     //MENU_DEC,
     //MENU_TIMEOUT,

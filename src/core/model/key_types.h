@@ -25,7 +25,8 @@ typedef enum
     KEY_F10,
     KEY_F11,
     KEY_F12,
-    KEY_OK
+    KEY_OK,
+    KEY_LONG,
 } KeyCode;
 
 extern const EnumEntry key_table_enum[];
