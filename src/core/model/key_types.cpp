@@ -21,7 +21,8 @@ extern const EnumEntry key_table_enum[] = {
     {"key F9", KEY_F9},
     {"key F10", KEY_F10},
     {"key F11", KEY_F11},
-    {"key F12", KEY_F12}
+    {"key F12", KEY_F12},
+    {"key OK", KEY_OK}
 
 };
 
