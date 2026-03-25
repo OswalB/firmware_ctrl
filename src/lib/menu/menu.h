@@ -5,7 +5,7 @@
 
 #define MENU_MAX_VISIBLE 4
 #define MENU_MAX_DEPTH   3
-#define MENU_LINE_LEN 32
+#define MENU_LINE_LEN 21
 
 extern bool menu_dirty;
 

@@ -41,7 +41,14 @@
       "left": 57.6,
       "attrs": { "value": "100" }
     },
-    { "type": "wokwi-ky-040", "id": "encoder1", "top": -132.7, "left": 220, "attrs": {} }
+    { "type": "wokwi-ky-040", "id": "encoder1", "top": -132.7, "left": 220, "attrs": {} },
+    {
+      "type": "wokwi-lcd2004",
+      "id": "lcd1",
+      "top": 64,
+      "left": 456.8,
+      "attrs": { "pins": "i2c" }
+    }
   ],
   "connections": [
     [ "drv1:2A", "stepper1:A-", "green", [ "h0" ] ],
@@ -64,7 +71,16 @@
     [ "encoder1:GND", "mega:GND.1", "black", [ "h67.2", "v58.4", "h-278.4" ] ],
     [ "drv1:DIR", "mega:5", "#8f4814", [ "h-9.6", "v28.8", "h220.8" ] ],
     [ "encoder1:SW", "mega:4", "green", [ "h57.6", "v67.3", "h-172.8" ] ],
-    [ "encoder1:VCC", "mega:5V", "red", [ "h105.6", "v451.6", "h-268.8" ] ]
+    [ "encoder1:VCC", "mega:5V", "red", [ "h96", "v451.6", "h-261.5" ] ],
+    [
+      "mega:GND.2",
+      "lcd1:GND",
+      "black",
+      [ "v45.3", "h-26.65", "v67.2", "h288", "v-278.4", "h9.6" ]
+    ],
+    [ "lcd1:VCC", "mega:5V", "red", [ "h-28.8", "v249.7", "h-259.2" ] ],
+    [ "lcd1:SDA", "mega:20", "purple", [ "h-48", "v-57.4", "h-76.8" ] ],
+    [ "mega:21", "lcd1:SCL", "magenta", [ "v-19.2", "h59.7", "v57.6", "h0" ] ]
   ],
   "dependencies": {}
 }

@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include "modules/console/console.h"
 #include "modules/led/led_module.h"
+#include "modules/display/display.h"
 #include "core/event/event_queue.h"
 #include "core/model/key_types.h"
 #include "core/model/domain_capabilities.h"
@@ -14,7 +15,7 @@
 static DomainType menu_item_get_domain(const MenuItem *item);
 static ParamType menu_item_get_param(const MenuItem *item);
 static uint8_t menu_item_get_instance(const MenuItem *item);
-void menu_print(void);
+void menu_print(MenuView *view);
 //****
 
 #define LABEL_WIDTH 10
@@ -92,9 +93,12 @@ void menu_init(void)
 
 void menu_update(void)
 {
-    if (menu_dirty & (millis() - last_render > 200))
+    if (menu_dirty && (millis() - last_render > 200))
     {
-        menu_print();
+        MenuView view;
+        menu_render(&view);
+        menu_print(&view);
+        display_render(&view);
         menu_dirty = false;
         last_render = millis();
     }
@@ -387,19 +391,19 @@ static int32_t menu_get_current_value(const MenuItem *item)
 
 //* * * * * TEST * * * * * *  BORRAR AL FINAL * * * *
 
-void menu_print(void)
+void menu_print(MenuView *view)
 {
-    MenuView view;
+    //MenuView view;
 
-    menu_render(&view);
+    //menu_render(&view);
 
     Console_Print(MSG_LOG, "01234567890123456789");
 
-    for (uint8_t i = 0; i < view.count; i++)
+    for (uint8_t i = 0; i < view->count; i++)
     {
-        if (i == view.cursor)
-            Console_Print(MSG_LOG, "> %s", view.lines[i]);
+        if (i == view->cursor)
+            Console_Print(MSG_LOG, "> %s", view->lines[i]);
         else
-            Console_Print(MSG_LOG, "  %s", view.lines[i]);
+            Console_Print(MSG_LOG, "  %s", view->lines[i]);
     }
 }
