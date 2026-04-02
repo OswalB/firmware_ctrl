@@ -4,6 +4,7 @@
 #include "input/serial/serial_if.h"
 #include "lib/menu/menu.h"
 #include "input/encoder/encoder.h"
+#include "drivers/buzzer/buzzer.h"
 
 void app_run()
 {
@@ -11,6 +12,7 @@ void app_run()
     encoder_update();
     machine_update();
     menu_update();
+    buzzer_tick;
     serial_drain_fsm(); // imprime todo lo que FSM haya producido
     led::led_update();
 }

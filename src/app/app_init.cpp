@@ -10,10 +10,12 @@
 #include "lib/crc32/crc32.h"
 #include "lib/menu/menu.h"
 #include "input/encoder/encoder.h"
+#include "drivers/buzzer/buzzer.h"
 
 void app_init()
 {
-       
+
+    buzzer_init(23);
     // eventQueue_init();
     led::led_init();
 

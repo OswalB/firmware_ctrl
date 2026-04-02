@@ -98,17 +98,22 @@ void encoder_update(void)
         }
 
         // KY-040 → 4 pasos por "click"
-        if (acc >= 4)
+        if (state == 0b00)
         {
-            ev.value = KEY_DOWN;
-            acc = 0;
-            send = true;
-        }
-        else if (acc <= -4)
-        {
-            ev.value = KEY_UP;
-            acc = 0;
-            send = true;
+            if (acc > 0)
+            {
+                //Console_Print(MSG_DBG, "DOWN");
+                ev.value = KEY_DOWN;
+                send = true;
+            }
+            else if (acc < 0)
+            {
+                //Console_Print(MSG_DBG, "UP");
+                ev.value = KEY_UP;
+                send = true;
+            }
+
+            acc = 0; // reset para siguiente click
         }
 
         prev_state = state;

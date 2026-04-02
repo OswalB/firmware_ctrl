@@ -7,6 +7,7 @@
 #include "core/domains/domain_custom.h"
 #include "lib/utils/interpreter.h"
 #include "lib/interface_hmi/accel_input.h"
+#include "drivers/buzzer/buzzer.h"
 
 #include <stdio.h>
 #include "lib/menu/menu.h"
@@ -126,6 +127,7 @@ void machine_handleEvent(Event &evt)
 
     if (evt.type == EVT_KEY_PRESS)
     {
+        buzzer_play(2000, 30, 1);
         evt.domain = DOMAIN_MENU;
         switch (evt.value)
         {

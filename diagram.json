@@ -48,6 +48,13 @@
       "top": 64,
       "left": 456.8,
       "attrs": { "pins": "i2c" }
+    },
+    {
+      "type": "wokwi-buzzer",
+      "id": "bz1",
+      "top": -122.4,
+      "left": 462.6,
+      "attrs": { "volume": "0.1" }
     }
   ],
   "connections": [
@@ -80,7 +87,9 @@
     ],
     [ "lcd1:VCC", "mega:5V", "red", [ "h-28.8", "v249.7", "h-259.2" ] ],
     [ "lcd1:SDA", "mega:20", "purple", [ "h-48", "v-57.4", "h-76.8" ] ],
-    [ "mega:21", "lcd1:SCL", "magenta", [ "v-19.2", "h59.7", "v57.6", "h0" ] ]
+    [ "mega:21", "lcd1:SCL", "magenta", [ "v-19.2", "h59.7", "v57.6", "h0" ] ],
+    [ "mega:GND.1", "bz1:1", "black", [ "v-115.2", "h364.6", "v-19.2" ] ],
+    [ "mega:23", "bz1:2", "green", [ "v1.1", "h16.6", "v-57.6", "h124.8" ] ]
   ],
   "dependencies": {}
 }

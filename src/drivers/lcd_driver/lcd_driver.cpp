@@ -46,20 +46,32 @@ static void format_line(MenuView *view, uint8_t i)
 
 void lcd_render(MenuView *view)
 {
+    int8_t prev = last_cursor;
+    int8_t curr = view->cursor;
+
     for (uint8_t i = 0; i < LCD_ROWS; i++)
     {
         format_line(view, i);
 
-        // detectar cambios (texto o cursor)
-        if (strcmp(render_line, last_lines[i]) != 0 || view->cursor != last_cursor)
+        bool needs_update =
+            (strcmp(render_line, last_lines[i]) != 0) ||
+            (i == prev) ||
+            (i == curr);
+
+        if (needs_update)
         {
+            lcd.setCursor(0, i);
+
+            // 🔥 BORRADO FUERTE
+            for (uint8_t j = 0; j < LCD_COLS; j++)
+                lcd.print(' ');
+
             lcd.setCursor(0, i);
             lcd.print(render_line);
 
-            // guardar estado
             strcpy(last_lines[i], render_line);
         }
     }
 
-    last_cursor = view->cursor;
+    last_cursor = curr;
 }
