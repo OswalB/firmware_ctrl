@@ -8,16 +8,16 @@
 // Pines Arduino Mega
 #define ENC_A_PIN 2  // CLK
 #define ENC_B_PIN 3  // DT
-#define ENC_SW_PIN 4 // botón
+//#define ENC_SW_PIN 4 // botón
 
-#define LONG_PRESS_MS 800
+//#define LONG_PRESS_MS 800
 
-static uint32_t press_time = 0;
-static uint8_t long_sent = 0;
+//static uint32_t press_time = 0;
+//static uint8_t long_sent = 0;
 
 static uint8_t prev_state = 0;
 static int8_t acc = 0;
-static uint8_t last_btn = 1;
+//static uint8_t last_btn = 1;
 
 static uint8_t read_encoder(void)
 {
@@ -30,7 +30,7 @@ void encoder_init(void)
 {
     pinMode(ENC_A_PIN, INPUT_PULLUP);
     pinMode(ENC_B_PIN, INPUT_PULLUP);
-    pinMode(ENC_SW_PIN, INPUT_PULLUP);
+    //pinMode(ENC_SW_PIN, INPUT_PULLUP);
 
     prev_state = read_encoder();
 }
@@ -43,18 +43,18 @@ void encoder_update(void)
     bool send = false;
 
     // BOTÓN
-    uint8_t btn = digitalRead(ENC_SW_PIN);
-    uint32_t now = millis();
+    //uint8_t btn = digitalRead(ENC_SW_PIN);
+    //uint32_t now = millis();
 
     // Detectar PRESIÓN
-    if (btn == 0 && last_btn == 1)
+    /*if (btn == 0 && last_btn == 1)
     {
         press_time = now;
         long_sent = 0;
-    }
+    }*/
 
     // Detectar MANTENIDO (long press)
-    if (btn == 0 && !long_sent)
+    /*if (btn == 0 && !long_sent)
     {
         if ((now - press_time) > LONG_PRESS_MS)
         {
@@ -63,10 +63,10 @@ void encoder_update(void)
 
             long_sent = 1; // evitar repetición
         }
-    }
+    }*/
 
     // Detectar LIBERACIÓN (short press)
-    if (btn == 1 && last_btn == 0)
+    /*if (btn == 1 && last_btn == 0)
     {
         if (!long_sent)
         {
@@ -75,7 +75,7 @@ void encoder_update(void)
         }
     }
 
-    last_btn = btn;
+    last_btn = btn;*/
 
     // ENCODER
     uint8_t state = read_encoder();

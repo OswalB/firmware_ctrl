@@ -10,6 +10,7 @@
 #include "lib/crc32/crc32.h"
 #include "lib/menu/menu.h"
 #include "input/encoder/encoder.h"
+#include "input/keypad/keypad.h"
 #include "drivers/buzzer/buzzer.h"
 
 void app_init()
@@ -31,6 +32,8 @@ void app_init()
     Console_Print(MSG_DBG,"Custom [0]: %s led: %ld", cfg->customer[0], cfg->Led1_time);
     menu_init();
     encoder_init();
+    keypad_init();
+
 //---------------------------------------
 
 
