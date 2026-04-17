@@ -14,6 +14,7 @@ typedef struct
     uint8_t count;
     char lines[MENU_MAX_VISIBLE][MENU_LINE_LEN];
     uint8_t cursor;
+    uint8_t show_cursor;
 } MenuView;
 
 typedef int32_t (*ParamGetter)(uint8_t id);
@@ -31,5 +32,9 @@ void menu_input(MenuInputEvent ev);
 
 void menu_render(MenuView *view);
 MenuState menu_get_state();
+
+void dashboard_render(MenuView *view);
+
+
 
 

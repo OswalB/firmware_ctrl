@@ -17,9 +17,6 @@ static RotaryEncoder encoder(
     ENC_B_PIN,
     RotaryEncoder::LatchMode::TWO03);
 
-// static uint8_t prev_state = 0;
-// static int8_t acc = 0;
-
 static uint8_t read_encoder(void)
 {
     uint8_t a = digitalRead(ENC_A_PIN);

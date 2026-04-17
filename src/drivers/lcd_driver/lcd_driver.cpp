@@ -28,20 +28,22 @@ void lcd_init(void)
 
 static void format_line(MenuView *view, uint8_t i)
 {
+
     memset(render_line, ' ', LCD_COLS);
     render_line[LCD_COLS] = '\0';
 
     if (i >= view->count)
         return;
-
-    // cursor
-    if (i == view->cursor)
-        render_line[0] = '>';
+    if (view->show_cursor)
+    {
+        render_line[0] = (i == view->cursor) ? '>' : ' ';
+        // copiar texto (desde posición 1)
+        strncpy(&render_line[1], view->lines[i], LCD_COLS - 1);
+    }
     else
-        render_line[0] = ' ';
-
-    // copiar texto (desde posición 1)
-    strncpy(&render_line[1], view->lines[i], LCD_COLS - 1);
+    {
+        strncpy(&render_line[0], view->lines[i], LCD_COLS );
+    }
 }
 
 void lcd_render(MenuView *view)

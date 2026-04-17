@@ -5,6 +5,7 @@
 #include "modules/console/console.h"
 #include "modules/led/led_module.h"
 #include "modules/display/display.h"
+#include "modules/system/system.h"
 #include "core/event/event_queue.h"
 #include "core/model/key_types.h"
 #include "core/model/domain_capabilities.h"
@@ -20,6 +21,8 @@ void menu_print(MenuView *view);
 
 #define LABEL_WIDTH 10
 #define VALUE_WIDTH 6
+
+#define UI_TIMEOUT_MS 5000
 
 AccelTracker acc = {0, 0, 0, 500};
 uint32_t last_render = 0;
@@ -89,19 +92,54 @@ void menu_init(void)
     parent = 255;
 
     level = 0;
+
+    ui_notify_activity();
 }
 
 void menu_update(void)
 {
+    if (ui_mode == UI_MENU)
+    {
+        uint32_t last_activity = getLast_activity();
+        uint32_t current = millis();
+        if (current - last_activity > UI_TIMEOUT_MS)
+        {
+            ui_mode = UI_DASHBOARD;
+            menu_dirty = true;
+        }
+    }
+
     if (menu_dirty && (millis() - last_render > 200))
     {
         MenuView view;
-        menu_render(&view);
-        menu_print(&view);
+
+        if (ui_mode == UI_DASHBOARD)
+        {
+            dashboard_render(&view);
+        }
+        else
+        {
+
+            menu_render(&view);
+            menu_print(&view); // Test por consola
+        }
         display_render(&view);
         menu_dirty = false;
         last_render = millis();
     }
+}
+
+void dashboard_render(MenuView *view)
+{
+
+    view->count = 4;
+    view->cursor = 1;
+    view->show_cursor = 0;
+    snprintf(view->lines[0], MENU_LINE_LEN, "== DASHBOARD V3 ==");
+    snprintf(view->lines[1], MENU_LINE_LEN, "Sistema OK");
+    snprintf(view->lines[2], MENU_LINE_LEN, "Temp: --");
+    snprintf(view->lines[3], MENU_LINE_LEN, "RPM:  --");
+    Console_Print(MSG_DBG, "construyendo dashboard...");
 }
 
 void menu_input(MenuInputEvent ev)
@@ -161,7 +199,10 @@ void menu_input(MenuInputEvent ev)
             state = MENU_STATE_NAV;
             Console_Print(MSG_LOG, "EDIT CANCEL");
             break;
+        case MENU_LONG:
+            break;
         }
+
         // Console_Print(MSG_LOG, "VAL=%ld", edit_value);
         return;
     }
@@ -243,6 +284,7 @@ void menu_render(MenuView *view)
 
     view->count = 0;
     view->cursor = cursor - scroll;
+    view->show_cursor = 1;
 
     for (uint8_t i = 0; i < MENU_MAX_VISIBLE; i++)
     {
@@ -272,12 +314,12 @@ void menu_render(MenuView *view)
 
                 // snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld %s", label, val, unit);
 
-                snprintf(view->lines[i], MENU_LINE_LEN,"%-8s=%6ld %s",label,(long)val,unit);
+                snprintf(view->lines[i], MENU_LINE_LEN, "%-8s=%6ld %s", label, (long)val, unit);
             }
             else
             {
-                //snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
-                snprintf(view->lines[i], MENU_LINE_LEN,"%-8s=%6ld",label,(long)val);
+                // snprintf(view->lines[i], MENU_LINE_LEN, "%s = %ld", label, val);
+                snprintf(view->lines[i], MENU_LINE_LEN, "%-8s=%6ld", label, (long)val);
             }
         }
         else
@@ -393,9 +435,9 @@ static int32_t menu_get_current_value(const MenuItem *item)
 
 void menu_print(MenuView *view)
 {
-    //MenuView view;
+    // MenuView view;
 
-    //menu_render(&view);
+    // menu_render(&view);
 
     Console_Print(MSG_LOG, "01234567890123456789");
 

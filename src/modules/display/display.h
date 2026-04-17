@@ -9,4 +9,5 @@
 
 void display_init(void);
 void display_render(MenuView *view);
+void display_dashboard();
 

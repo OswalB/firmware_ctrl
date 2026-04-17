@@ -11,3 +11,8 @@ void display_render(MenuView *view)
 {
     lcd_render(view);
 }
+
+void display_dashboard()
+{
+    lcd_dashboard_render();
+}

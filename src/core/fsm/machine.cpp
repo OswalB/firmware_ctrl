@@ -3,6 +3,7 @@
 #include <string.h>
 #include "core/event/event_queue.h"
 #include "modules/console/console.h"
+#include "modules/system/system.h"
 #include "core/domains/domain_led.h"
 #include "core/domains/domain_custom.h"
 #include "lib/utils/interpreter.h"
@@ -117,7 +118,7 @@ void machine_update(void)
 
 void machine_handleEvent(Event &evt)
 {
-    menu_dirty=true;
+    menu_dirty = true;
     //   🔴 1. Eventos globales
     if (evt.type == EVT_ERROR)
     {
@@ -127,8 +128,14 @@ void machine_handleEvent(Event &evt)
 
     if (evt.type == EVT_KEY_PRESS)
     {
+
         buzzer_play(2000, 30, 1);
         evt.domain = DOMAIN_MENU;
+        ui_notify_activity();
+        if (ui_mode == UI_DASHBOARD)
+        {
+            ui_mode = UI_MENU;
+        }
         switch (evt.value)
         {
         case KEY_UP:
@@ -145,19 +152,18 @@ void machine_handleEvent(Event &evt)
             break;
         case KEY_LONG:
             menu_input(MENU_LONG);
-            break;    
+            break;
 
         case KEY_LEFT:
             menu_input(MENU_BACK);
             break;
 
         case KEY_DELETE:
-            
+
         default:
 
             break;
         }
-
     }
 
     // 🔵 2. Delegación por dominio
@@ -179,8 +185,8 @@ void machine_handleEvent(Event &evt)
         break;
 
     case DOMAIN_MENU:
-        //menu_dirty = true;
-        //menu_print();
+        // menu_dirty = true;
+        // menu_print();
         break;
     default:
         Console_Print(MSG_ERR,
@@ -188,6 +194,4 @@ void machine_handleEvent(Event &evt)
                       evt.domain);
         break;
     }
-    
 }
-
